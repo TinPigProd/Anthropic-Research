@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Documentation Operations in Frontier AI Risk Reporting: Christin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+:root {
+ --paper:#FAFAF7; --paper2:#F3F2EE; --paper3:#E9E7E1;
+ --ink:#1C1C1A; --ink-mid:#5C5B56; --ink-soft:#9B9990;
+ --rule:rgba(28,28,26,0.10); --rule-mid:rgba(28,28,26,0.18);
+ --blue:#1A3A6B; --blue-dim:rgba(26,58,107,0.07); --blue-light:#2A5499;
+ --amber:#6B4A00; --amber-dim:rgba(107,74,0,0.08);
+ --red:#7A1A1A; --red-dim:rgba(122,26,26,0.07);
+}
+body { font-family:'Inter',sans-serif; background:var(--paper); color:var(--ink); -webkit-font-smoothing:antialiased; min-height:100vh; }
+
+.site-header { background:var(--paper); border-bottom:1px solid var(--rule-mid); padding:0 2.5rem; height:56px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; }
+.header-name { font-family:'Libre Baskerville',serif; font-size:15px; color:var(--ink); }
+.header-back { font-size:12px; color:var(--blue-light); text-decoration:none; }
+.header-back:hover { text-decoration:underline; }
+
+.doc { max-width:740px; margin:0 auto; padding:0 2.5rem 6rem; }
+
+/* COVER */
+.cover { padding:4rem 0 3rem; border-bottom:2px solid var(--ink); margin-bottom:3rem; }
+.cover-type { font-size:10px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; font-family:'JetBrains Mono',monospace; color:var(--ink-soft); margin-bottom:1.5rem; }
+.cover-title { font-family:'Libre Baskerville',serif; font-size:clamp(22px,3.5vw,34px); line-height:1.25; color:var(--ink); margin-bottom:0.75rem; font-weight:400; }
+.cover-subtitle { font-size:15px; color:var(--ink-mid); font-weight:300; margin-bottom:2.5rem; line-height:1.6; }
+.cover-meta { display:grid; grid-template-columns:1fr 1fr 1fr; gap:1.5rem; padding-top:1.5rem; border-top:0.5px solid var(--rule-mid); }
+.meta-label { font-size:9px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; font-family:'JetBrains Mono',monospace; color:var(--ink-soft); margin-bottom:3px; }
+.meta-value { font-size:13px; color:var(--ink); font-weight:400; }
+
+/* EXEC SUMMARY */
+.exec-summary { background:var(--paper2); border:1px solid var(--rule-mid); padding:1.75rem; margin-bottom:3rem; }
+.exec-label { font-size:9px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; font-family:'JetBrains Mono',monospace; color:var(--ink-soft); margin-bottom:0.875rem; }
+.exec-body { font-size:14px; color:var(--ink); line-height:1.8; font-weight:300; }
+.exec-body p { margin-bottom:0.75rem; }
+.exec-body p:last-child { margin-bottom:0; }
+.exec-body strong { font-weight:600; }
+
+/* SECTION */
+.section { margin-bottom:3rem; }
+.section-num { font-size:10px; font-weight:600; letter-spacing:0.1em; font-family:'JetBrains Mono',monospace; color:var(--ink-soft); margin-bottom:0.25rem; }
+.section-title { font-family:'Libre Baskerville',serif; font-size:22px; color:var(--ink); margin-bottom:1rem; padding-bottom:0.75rem; border-bottom:0.5px solid var(--rule-mid); font-weight:400; }
+.section-body { font-size:14px; color:var(--ink); line-height:1.85; font-weight:300; }
+.section-body p { margin-bottom:1rem; }
+.section-body p:last-child { margin-bottom:0; }
+.section-body strong { font-weight:600; }
+
+.subsection { margin-top:1.75rem; }
+.subsection-title { font-size:14px; font-weight:600; color:var(--ink); margin-bottom:0.75rem; font-family:'Libre Baskerville',serif; font-style:italic; }
+
+/* CALLOUT */
+.callout { padding:1rem 1.25rem; border-left:3px solid; margin:1.25rem 0; font-size:13px; line-height:1.7; font-weight:300; }
+.callout-label { font-size:9px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; font-family:'JetBrains Mono',monospace; margin-bottom:5px; }
+.callout-blue { background:var(--blue-dim); border-color:var(--blue); }
+.callout-blue .callout-label { color:var(--blue); }
+.callout-amber { background:var(--amber-dim); border-color:var(--amber); }
+.callout-amber .callout-label { color:var(--amber); }
+
+/* BEFORE/AFTER */
+.ba-wrap { margin:1.25rem 0; }
+.ba-toggle { display:flex; border:1px solid var(--rule-mid); overflow:hidden; margin-bottom:0; }
+.ba-btn { flex:1; font-size:11px; font-weight:500; padding:0.6rem; cursor:pointer; background:var(--paper); color:var(--ink-soft); border:none; font-family:'Inter',sans-serif; letter-spacing:0.03em; transition:all 0.15s; }
+.ba-btn.active { background:var(--blue); color:#fff; }
+.ba-panel { display:none; border:1px solid var(--rule-mid); border-top:none; padding:1.25rem; font-size:13px; line-height:1.7; font-weight:300; background:var(--paper); }
+.ba-panel.active { display:block; }
+.ba-panel em { font-style:italic; color:var(--ink-mid); }
+.ba-panel .source { font-size:10px; font-family:'JetBrains Mono',monospace; color:var(--ink-soft); margin-top:0.75rem; padding-top:0.75rem; border-top:0.5px solid var(--rule); }
+
+/* CONTRIBUTOR VOICES */
+.voices { border:1px solid var(--rule-mid); margin:1.25rem 0; }
+.voice-row { border-bottom:0.5px solid var(--rule); }
+.voice-row:last-child { border-bottom:none; }
+.voice-trigger { display:grid; grid-template-columns:140px 1fr 20px; gap:1rem; align-items:center; padding:0.875rem 1rem; cursor:pointer; background:var(--paper); border:none; width:100%; text-align:left; font-family:'Inter',sans-serif; transition:background 0.15s; }
+.voice-trigger:hover, .voice-trigger.open { background:var(--paper2); }
+.voice-team { font-size:11px; font-weight:600; font-family:'JetBrains Mono',monospace; color:var(--ink); letter-spacing:0.03em; }
+.voice-summary { font-size:12px; color:var(--ink-mid); font-weight:300; }
+.voice-chevron { font-size:9px; color:var(--blue); transition:transform 0.2s; }
+.voice-trigger.open .voice-chevron { transform:rotate(180deg); }
+.voice-detail { display:none; padding:1.25rem 1rem; background:var(--paper2); border-top:0.5px solid var(--rule); }
+.voice-detail.open { display:block; }
+.voice-detail p { font-size:13px; color:var(--ink); line-height:1.75; font-weight:300; margin-bottom:0.75rem; }
+.voice-detail p:last-of-type { margin-bottom:0; }
+.voice-sample { margin-top:0.875rem; padding:0.875rem 1rem; background:var(--paper3); border-left:3px solid var(--rule-mid); font-size:12px; color:var(--ink-mid); line-height:1.65; font-style:italic; font-weight:300; }
+.voice-sample strong { font-weight:600; color:var(--ink-soft); font-style:normal; font-size:10px; letter-spacing:0.08em; text-transform:uppercase; font-family:'JetBrains Mono',monospace; display:block; margin-bottom:5px; }
+
+/* OBSERVATION TABLE */
+.obs-table { width:100%; border-collapse:collapse; font-size:12px; margin:1.25rem 0; }
+.obs-table th { background:var(--paper3); padding:0.6rem 0.875rem; text-align:left; font-size:9px; letter-spacing:0.1em; text-transform:uppercase; font-family:'JetBrains Mono',monospace; color:var(--ink-mid); font-weight:600; border-bottom:1px solid var(--rule-mid); }
+.obs-table td { padding:0.75rem 0.875rem; border-bottom:0.5px solid var(--rule); color:var(--ink); line-height:1.55; font-weight:300; vertical-align:top; }
+.obs-table tr:last-child td { border-bottom:none; }
+.td-strong { font-weight:600; color:var(--ink); }
+.badge { display:inline-block; font-size:9px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; font-family:'JetBrains Mono',monospace; padding:2px 6px; }
+.badge-watch { background:var(--amber-dim); color:var(--amber); }
+.badge-note { background:var(--blue-dim); color:var(--blue); }
+
+/* CONCLUSION */
+.conclusion { background:var(--paper2); border:1px solid var(--rule-mid); border-left:4px solid var(--blue); padding:1.75rem; margin-bottom:2rem; }
+.conclusion-label { font-size:9px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; font-family:'JetBrains Mono',monospace; color:var(--blue); margin-bottom:0.875rem; }
+.conclusion-body { font-size:14px; color:var(--ink); line-height:1.85; font-weight:300; }
+.conclusion-body p { margin-bottom:0.75rem; }
+.conclusion-body p:last-child { margin-bottom:0; }
+.conclusion-body strong { font-weight:600; }
+
+/* FOOTNOTES */
+.footnotes { margin-top:3rem; padding-top:1.5rem; border-top:0.5px solid var(--rule-mid); }
+.footnotes-label { font-size:9px; letter-spacing:0.1em; text-transform:uppercase; font-family:'JetBrains Mono',monospace; color:var(--ink-soft); margin-bottom:0.875rem; }
+.footnote { font-size:11px; color:var(--ink-soft); line-height:1.6; margin-bottom:0.5rem; font-weight:300; }
+.footnote sup { font-size:8px; }
+
+/* FOOTER */
+.doc-footer { margin-top:3rem; padding-top:2rem; border-top:0.5px solid var(--rule-mid); display:flex; justify-content:space-between; font-size:11px; color:var(--ink-soft); }
+.doc-footer a { color:var(--blue-light); text-decoration:none; }
+.doc-footer a:hover { text-decoration:underline; }
+
+@media(max-width:640px){
+ .cover-meta { grid-template-columns:1fr 1fr; }
+ .voice-trigger { grid-template-columns:100px 1fr 20px; }
+ .doc { padding:0 1.5rem 5rem; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+ <div class="header-name">Christin Piganell · Research Operations</div>
+ <div style="display:flex;gap:1.5rem;align-items:center;"><a href="https://linkedin.com/in/cpiganell" target="_blank" style="font-size:12px;color:var(--ink-soft);text-decoration:none;">LinkedIn →</a><a class="header-back" href="research-ops-index.html">← Portfolio</a></div>
+</header>
+
+<div class="doc">
+
+ <!-- COVER -->
+ <div class="cover">
+ <div class="cover-type">White Paper · Artifact 01</div>
+ <h1 class="cover-title">Documentation Operations in Frontier AI Risk Reporting</h1>
+ <p class="cover-subtitle">An editorial analysis of Anthropic's published risk documentation: where multi-author production creates consistency risk, and what a documentation operations function does to address it.</p>
+ <div class="cover-meta">
+ <div><div class="meta-label">Author</div><div class="meta-value">Christin Piganell</div></div>
+ <div><div class="meta-label">Date</div><div class="meta-value">July 2026</div></div>
+ <div><div class="meta-label">Source documents</div><div class="meta-value">RSP v1.0–v3.4; Claude Opus 4.6 System Card</div></div>
+ </div>
+ </div>
+
+ <!-- EXEC SUMMARY -->
+ <div class="exec-summary">
+ <div class="exec-label">Executive Summary</div>
+ <div class="exec-body">
+ <p>Anthropic's Responsible Scaling Policy now requires the production of Risk Reports on a 3-to-6-month cadence, each covering all publicly deployed models, coordinating evidence from multiple specialized research teams, and remaining externally consistent with system cards, prior Risk Reports, and the RSP itself. As the RSP has evolved through five versions, the documentation obligations it creates have grown more complex: new terminology has required retroactive clarification, new provisions have changed what public versions must contain, and the cross-document consistency requirements have expanded to include external review.</p>
+ <p><strong>This white paper analyzes those documentation challenges from an operations perspective.</strong> It does not assess the AI safety decisions themselves. It identifies where multi-author production creates register inconsistency, where terminology requires active discipline to remain stable across RSP versions, and where the RSP's cross-document consistency requirements create ongoing governance obligations. It concludes with the argument that a dedicated documentation operations function is not a support role in this process. It is a production-critical function that determines whether the document ships as a coherent whole or as a collection of technically accurate but editorially inconsistent contributions.</p>
+ </div>
+ </div>
+
+ <!-- SECTION 1 -->
+ <div class="section">
+ <div class="section-num">Section 1</div>
+ <div class="section-title">The Documentation Challenge in Frontier AI Risk Reporting</div>
+ <div class="section-body">
+ <p>A Risk Report under RSP v3.4 is one of the most demanding documentation artifacts in any industry. It must be factually precise about technical capabilities that are genuinely uncertain, candid about limitations without undermining the credibility of its conclusions, internally consistent across sections authored by researchers with distinct disciplinary registers, and externally consistent with a family of related documents that are themselves evolving.</p>
+ <p>The RSP's own language acknowledges this complexity. Section 3.2 requires that Risk Reports be "direct, candid, and informative" while also acknowledging uncertainty. Section 3.3 requires that the document integrate threat model identification, capability evaluations, mitigation assessments, risk analyses, and forward-looking commitments into a single coherent structure. Section 3.6 requires that this document withstand external review by parties with "significant experience and expertise" who are specifically selected for their willingness to be candid about disagreements.</p>
+ <p>These are documentation requirements, not just safety requirements. Meeting them requires a function that is responsible for the document as a document, distinct from the researchers who are responsible for the technical substance. That is what a Research Operations Specialist does.</p>
+
+ <div class="subsection">
+ <div class="subsection-title">Why this is harder than it looks</div>
+ <p>The contributing teams to a Risk Report each have legitimate, substantive reasons for writing the way they write. The Frontier Red Team's terse, adversarial register reflects the nature of their work. The Alignment team's heavily qualified prose reflects their genuine epistemic caution about what can be concluded from behavioral evidence. The Capabilities team's benchmark-dense contributions reflect the evidential standard their work requires. None of these registers is wrong. The document that results from integrating them without editorial intervention is.</p>
+ <p>A document where Section 2 says "the classifier is beatable via academic framing" (Red Team register) and Section 4 says "it remains unclear whether the outputs constitute meaningful uplift under the CBRN-3 threshold definition" (Alignment register) and Section 6 says "the 11% multi-turn circumvention rate exceeds our 5% target" (Safeguards register) is not internally inconsistent in its facts. It is inconsistent in its implied confidence level, its implied conclusion, and its implied audience. A reader attempting to assess whether the RSP's risk mitigation standards have been met cannot do so cleanly from a document with three different registers for the same finding.</p>
+ <p>Research Operations resolves this. Not by changing the substance, but by translating each contribution into a common register that preserves the epistemic accuracy of each team's finding while producing a document that reads as a single coherent argument.</p>
+ </div>
+ </div>
+ </div>
+
+ <!-- SECTION 2 -->
+ <div class="section">
+ <div class="section-num">Section 2</div>
+ <div class="section-title">Terminology Stability Across RSP Versions</div>
+ <div class="section-body">
+ <p>The RSP has evolved through five versions since September 2023. Each version has introduced new terms, modified existing terms, or shifted the meaning of established terms. Each of these changes creates a documentation maintenance obligation: all prior documents that used the old terminology must either be annotated, updated, or explicitly scoped to the version under which they were written. All new documents must use current terminology consistently.</p>
+ <p>The most significant terminology shift occurred between RSP v1.0 and v2.0. In v1.0, "ASL" referred to both the model and the safeguards applied to it. A reader encountering "ASL-3 model" in a v1.0 document understood this as a model designation. In v2.0, Anthropic clarified that "ASL" refers exclusively to groups of technical and operational safeguards, not to models.<sup>1</sup> A model is now "deployed under the ASL-3 Standard," not "an ASL-3 model."</p>
+
+ <div class="ba-wrap">
+ <div class="ba-toggle">
+ <button class="ba-btn active" onclick="toggleBA('asl', 'v1', this)">RSP v1.0 · September 2023</button>
+ <button class="ba-btn" onclick="toggleBA('asl', 'v2', this)">RSP v2.0 · October 2024</button>
+ <button class="ba-btn" onclick="toggleBA('asl', 'ops', this)">Research Ops implication</button>
+ </div>
+ <div class="ba-panel active" id="asl-v1">
+ In v1.0, ASL was used as both a model and a safeguard designator. Documents produced during this period use "ASL-3 model" as a noun phrase, implying the designation belongs to the model itself. This usage was internally consistent at the time of writing and accurately reflected the then-current RSP definition.
+ <div class="source">Source: RSP v1.0, effective September 19, 2023</div>
+ </div>
+ <div class="ba-panel" id="asl-v2">
+ RSP v2.0 changelog: "The term 'ASL' now refers to groups of technical and operational safeguards (it previously also referred to models). We also introduced the new concepts of Capability Thresholds and Required Safeguards. This change allows for more targeted application of safeguards based on specific capabilities, rather than broad model categories."
+ <div class="source">Source: RSP v2.0, effective October 15, 2024: Changelog section</div>
+ </div>
+ <div class="ba-panel" id="asl-ops">
+ Any document produced before October 2024 that uses "ASL-N model" as a noun phrase is now potentially misleading to a reader using current RSP terminology. Research Ops maintains a definition registry that flags this: the approved current usage is "deployed under the ASL-N Standard." A terminology sweep against prior documents, and a check that all new contributions use current language, is a Research Ops responsibility that prevents this terminology drift from persisting into new reports.
+ <div class="source">Research Ops implication · definition registry entry: ASL (AI Safety Level)</div>
+ </div>
+ </div>
+
+ <div class="subsection">
+ <div class="subsection-title">v3.4 terminology additions requiring active discipline</div>
+ <p>RSP v3.4 (effective July 8, 2026) introduced two provisions that create new terminology requirements for Risk Reports: the coverage date provision and the redaction indication requirement. Neither of these terms appeared in prior versions. Any Risk Report produced after July 8, 2026 must use them correctly. Any report produced before that date does not apply these requirements, but Research Ops must ensure the distinction is clear when prior reports are referenced in new ones.</p>
+ </div>
+
+ <div class="callout callout-amber">
+ <div class="callout-label">Documentation risk</div>
+ The RSP's changelog-based versioning means a reader of the current RSP and a reader of an older system card may encounter the same term with different definitions. Research Ops maintains the definition registry that maps current approved usage for each term, and reviews every contributor draft against it before editorial integration begins.
+ </div>
+ </div>
+ </div>
+
+ <!-- SECTION 3 -->
+ <div class="section">
+ <div class="section-num">Section 3</div>
+ <div class="section-title">Multi-Author Register Integration</div>
+ <div class="section-body">
+ <p>The Claude Opus 4.6 System Card (February 2026) draws on contributions from at least five distinct teams. Each team has a characteristic register shaped by the nature of their work, their epistemic standards, and the audience they are most accustomed to writing for. The following analysis identifies each team's characteristic voice and the specific documentation challenges their register creates when integrated into a single document.</p>
+ </div>
+
+ <div class="voices">
+ <div class="voice-row">
+ <button class="voice-trigger" onclick="toggleVoice(this)">
+ <div class="voice-team">Frontier Red Team</div>
+ <div class="voice-summary">Terse, adversarial, findings-first. No hedging.</div>
+ <div class="voice-chevron">▼</div>
+ </button>
+ <div class="voice-detail">
+ <p>The Frontier Red Team's mandate is to analyze the implications of frontier AI models for cybersecurity, biosecurity, and autonomous systems. Their contributions read as operational findings reports: direct, short-sentenced, focused on what was found and what it implies for deployment. They report results without interpretive softening because their job is to surface the finding, not to assess it in context.</p>
+ <p>The documentation challenge is twofold. First, Red Team findings often use field shorthand that needs explicit definition elsewhere in the document. When a Red Team contribution says "the classifier is beatable via academic framing," Research Ops must ensure "academic framing" is defined, that "beatable" is given a quantitative basis, and that the finding is connected to the threshold language the RSP requires. Second, the Red Team's confidence register, "this needs to block before deployment," may not match the more qualified determination the RSO will reach after reviewing all evidence. Research Ops preserves the finding while integrating it into the document's overall epistemic posture.</p>
+ <div class="voice-sample"><strong>Characteristic register</strong>"In 3 of 14 sessions we obtained output that would constitute meaningful uplift. The multi-turn circumvention rate of 11% exceeds our 5% target. The classifier is beatable via academic framing. This needs to be addressed before deployment."</div>
+ </div>
+ </div>
+
+ <div class="voice-row">
+ <button class="voice-trigger" onclick="toggleVoice(this)">
+ <div class="voice-team">Alignment Science</div>
+ <div class="voice-summary">Heavily qualified, epistemically careful, reluctant to conclude.</div>
+ <div class="voice-chevron">▼</div>
+ </button>
+ <div class="voice-detail">
+ <p>The Alignment team's contributions are marked by explicit acknowledgment of uncertainty and careful qualification of conclusions. This is not hedging for its own sake. It reflects genuine epistemic caution about what behavioral evidence can and cannot establish. The system card's own language on CBRN risk reads: "confidently ruling out these thresholds is becoming increasingly difficult" and "we have a limited understanding of the threat actors." These are Alignment register phrases that accurately represent the team's epistemic state.</p>
+ <p>The documentation challenge is integration. When Alignment's qualifications appear in the same document as Red Team findings stated with confidence, the register shift is jarring unless carefully edited. The solution is not to remove the qualifications: they are substantively correct and required by RSP Section 3.2's candor requirement. The solution is to ensure the qualifications appear at the right level of the document: acknowledged in the risk assessment, explained in the methodology, and not allowed to contradict findings that are better established.</p>
+ <div class="voice-sample"><strong>Characteristic register</strong>"It remains unclear whether these outputs constitute meaningful uplift under the CBRN-3 threshold definition. The external reviewers disagreed on this point. We believe additional expert opinion is warranted before a determination can be made with confidence. We note that available evaluation methods do not conclusively demonstrate high risk in this domain."</div>
+ </div>
+ </div>
+
+ <div class="voice-row">
+ <button class="voice-trigger" onclick="toggleVoice(this)">
+ <div class="voice-team">Capabilities (Bio)</div>
+ <div class="voice-summary">Benchmark-dense, score-focused, comparative framing.</div>
+ <div class="voice-chevron">▼</div>
+ </button>
+ <div class="voice-detail">
+ <p>The Capabilities team writes in the language of evaluation tables: scores, pass rates, comparison to prior models, evaluation methodology footnotes. This register is precise and reproducible but requires interpretive translation for the risk assessment sections. A score on a short-horizon computational biology task is meaningful data, but the risk determination requires connecting that number to a judgment about the CBRN-3 threshold: a connection the Capabilities contribution does not make, because that is not the Capabilities team's job.</p>
+ <p>The documentation challenge is that Capabilities contributions are often written before the interpretive layer is added. Research Ops must ensure that the numbers in evaluation tables match the narrative claims in risk assessment sections exactly, that no table is cited in a way that overstates or understates its implications, and that the evaluation methodology described in footnotes is consistent with the methodology description in the body text.</p>
+ <div class="voice-sample"><strong>Characteristic register</strong>"Long-form virology task: 2 of 8 protocols rated non-viable by external domain experts. 1 rated ambiguously viable. Short-horizon computational biology: 34.2 percentile against ASL-3 cohort baseline. Creative Biology Uplift Trial: participants working with the model made fewer critical errors than those working alone, but were still unable to fully succeed."</div>
+ </div>
+ </div>
+
+ <div class="voice-row">
+ <button class="voice-trigger" onclick="toggleVoice(this)">
+ <div class="voice-team">Interpretability</div>
+ <div class="voice-summary">Mechanistic, activation-level, internal-representation evidence.</div>
+ <div class="voice-chevron">▼</div>
+ </button>
+ <div class="voice-detail">
+ <p>Interpretability contributions are the most technically specialized and the hardest to integrate into accessible prose. The Opus 4.6 system card explicitly describes their methods: "activation oracles, attribution graphs, and sparse autoencoder features as practical tools for investigating model behavior." This evidence is different in kind from behavioral observations or benchmark scores. It concerns what is happening inside the model, not what the model outputs.</p>
+ <p>This distinction is crucial for risk assessment. Interpretability evidence can, in principle, distinguish between a capability being actively suppressed versus genuinely absent: a distinction that changes the risk picture significantly. A model that lacks a dangerous capability is different from a model that has it but is trained to not express it. Research Ops must bridge between the mechanistic finding and its risk implication, translating "activation analysis did not find evidence of suppressed representations in this domain" into a sentence that a policymaker or journalist can assess without losing the precision the finding requires.</p>
+ <div class="voice-sample"><strong>Characteristic register</strong>"Activation analysis using sparse autoencoder features did not identify evidence of suppressed CBRN-adjacent representations in the final deployed snapshot. This is consistent with the capability being absent at the representational level, though current interpretability methods cannot rule out subtle suppression with high confidence."</div>
+ </div>
+ </div>
+
+ <div class="voice-row">
+ <button class="voice-trigger" onclick="toggleVoice(this)">
+ <div class="voice-team">Safeguards Research</div>
+ <div class="voice-summary">Mitigation-focused, controls-oriented, deployment-readiness framing.</div>
+ <div class="voice-chevron">▼</div>
+ </button>
+ <div class="voice-detail">
+ <p>The Safeguards Research team writes in terms of what protections are in place, what their measured effectiveness is, and what the gap is between current state and the deployment standard's requirements. Their contributions map directly to the RSP's required mitigation disclosures: classifier performance, circumvention rates, access control architecture, monitoring cadence.</p>
+ <p>The documentation challenge is redaction. Safeguards contributions often contain implementation details that must be redacted in the public version because disclosing them would enable circumvention. RSP v3.4 requires that redactions be indicated in the public version. Research Ops coordinates the redaction pass: ensuring every redacted passage has an indicator, that the publicly stated redaction rationale is accurate, and that the public version's description of mitigations is accurate without being enabling.</p>
+ <div class="voice-sample"><strong>Characteristic register</strong>"Constitutional Classifier guards blocked 94% of direct CBRN-adjacent requests. Multi-turn circumvention rate: 11%, exceeding the 5% target for this deployment standard. Conversation-aware classifier in development. Estimated 6 weeks to implementation and validation. Deployment should be contingent on completion of both the classifier and the academic-framing retraining, not one."</div>
+ </div>
+ </div>
+ </div>
+
+ <div class="callout callout-blue" style="margin-top:1.25rem;">
+ <div class="callout-label">The integration challenge summarized</div>
+ Five teams, each with substantive reasons for writing the way they write, produce contributions that describe the same model with confidence levels that range from "this needs to block before deployment" to "it remains unclear whether these outputs constitute meaningful uplift." Research Operations' job is to produce a document where these findings coexist without contradicting each other in register, where the appropriate level of confidence is carried through consistently, and where a reader can assess the overall risk picture without being misled by the gap between sections.
+ </div>
+ </div>
+
+ <!-- SECTION 4 -->
+ <div class="section">
+ <div class="section-num">Section 4</div>
+ <div class="section-title">Cross-Document Consistency Requirements</div>
+ <div class="section-body">
+ <p>The RSP v3.4 states that Risk Reports must be "consistent with system cards, RSP disclosures, and other safety documentation." This is not a soft requirement. External reviewers are specifically tasked with assessing whether the public version allows them to evaluate the report's claims: and whether redactions undermine that ability. If a Risk Report's claims about a model's CBRN risk posture are inconsistent with what the system card says about the same evaluation, an external reviewer with domain expertise will identify the discrepancy.</p>
+ <p>The following table identifies specific cross-document consistency obligations created by RSP v3.4 and the Opus 4.6 system card, and the documentation risk each creates if unaddressed.</p>
+ </div>
+
+ <table class="obs-table">
+ <thead>
+ <tr>
+ <th>RSP requirement</th>
+ <th>What the system card shows</th>
+ <th>Documentation risk if unaddressed</th>
+ <th>Research Ops action</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td class="td-strong">Publish Risk Reports every 3–6 months</td>
+ <td>System card references prior risk reports but does not confirm the publication cadence was met for the preceding period</td>
+ <td>External reviewers cannot assess RSP procedural compliance without explicit cadence confirmation</td>
+ <td><span class="badge badge-note">Add cadence note</span></td>
+ </tr>
+ <tr>
+ <td class="td-strong">Acknowledge noteworthy changes in mitigation practices</td>
+ <td>Opus 4.6 system card notes ASL-3 safeguards were "refined" after May 2025 activation without specifying what changed</td>
+ <td>RSP v3.4 Section 3.3 requires disclosure of noteworthy changes. Vague language about "refinement" may not satisfy this standard for external review</td>
+ <td><span class="badge badge-watch">Flag for RSO</span></td>
+ </tr>
+ <tr>
+ <td class="td-strong">Coverage date provision (v3.4 new)</td>
+ <td>Reports may now analyze risks as of a coverage date distinct from the publication date. The Opus 4.6 card does not explicitly state a coverage date</td>
+ <td>Reports predating v3.4 are not subject to this requirement, but future reports must include explicit coverage date notation when relevant</td>
+ <td><span class="badge badge-note">Add to kickoff checklist</span></td>
+ </tr>
+ <tr>
+ <td class="td-strong">Redaction indication (v3.4 new)</td>
+ <td>Earlier system cards contain sections where detail is clearly omitted without an explicit redaction marker</td>
+ <td>v3.4 requires explicit indicators. Reports produced before v3.4 predate this requirement, but all subsequent reports must include markers</td>
+ <td><span class="badge badge-note">Apply to next cycle</span></td>
+ </tr>
+ <tr>
+ <td class="td-strong">External review when report covers highly capable models and is significantly redacted</td>
+ <td>The Opus 4.6 system card notes that "confidently ruling out these thresholds is becoming increasingly difficult," suggesting proximity to highly capable status</td>
+ <td>If a future model crosses the highly capable threshold as defined in RSP v3.4 Section 3.6, external review becomes mandatory. Research Ops tracks this trigger proactively</td>
+ <td><span class="badge badge-watch">Monitor threshold proximity</span></td>
+ </tr>
+ </tbody>
+ </table>
+ </div>
+
+ <!-- CONCLUSION -->
+ <div class="section">
+ <div class="section-num">Section 5</div>
+ <div class="section-title">Conclusion</div>
+
+ <div class="conclusion">
+ <div class="conclusion-label">Central argument</div>
+ <div class="conclusion-body">
+ <p>A Risk Report under RSP v3.4 is not a document that any one team can produce. It requires the Frontier Red Team's adversarial findings, the Alignment team's epistemic caution, the Capabilities team's evaluation evidence, the Interpretability team's mechanistic analysis, and the Safeguards team's mitigation documentation: integrated into a single coherent artifact that can withstand external review by domain experts specifically selected to disagree with it.</p>
+ <p><strong>The function that makes this possible is not AI safety research. It is documentation operations.</strong> Maintaining the definition registry so terminology stays stable across RSP versions. Tracking the open threads so no unresolved question ships without acknowledgment. Running the consistency check so the document's claims hold together across sections and across the family of related documents. Coordinating the redaction review so public versions satisfy v3.4's new indication requirement. Preparing the RSO submission package so the governance gate can be cleared without delay.</p>
+ <p>These are the operational prerequisites for a document that meets the RSP's stated commitment to being "direct, candid, and informative." Without them, the commitment exists on paper. With them, it exists in the document.</p>
+ </div>
+ </div>
+ </div>
+
+ <!-- FOOTNOTES -->
+ <div class="footnotes">
+ <div class="footnotes-label">Notes</div>
+ <div class="footnote"><sup>1</sup> RSP v2.0 changelog, effective October 15, 2024: "ASL definition changed: The term 'ASL' now refers to groups of technical and operational safeguards (it previously also referred to models). We also introduced the new concepts of Capability Thresholds and Required Safeguards."</div>
+ <div class="footnote"><sup>2</sup> RSP v3.4, effective July 8, 2026: "Requires public Risk Reports to contain indications of where material was redacted." This provision does not apply retroactively to reports published before July 8, 2026.</div>
+ <div class="footnote"><sup>3</sup> RSP v3.4, Section 3.1: "A Risk Report will cover all publicly deployed models at the time of its publication... We will publish a Risk Report every 3-6 months."</div>
+ <div class="footnote"><sup>4</sup> Claude Opus 4.6 System Card, February 2026: "confidently ruling out these thresholds is becoming increasingly difficult. This is in part because the model is approaching or surpassing high levels of capability in our 'rule-out' evaluations."</div>
+ <div class="footnote"><sup>5</sup> All analysis in this white paper is based on publicly available Anthropic documentation. No proprietary or internal information was used. The author has no affiliation with Anthropic.</div>
+ </div>
+
+ <div class="doc-footer">
+ <div>Christin Piganell · Research Operations Portfolio · 2026</div>
+ <a href="research-ops-index.html">← Back to portfolio</a>
+ </div>
+
+</div>
+
+<script>
+function toggleVoice(trigger) {
+ const detail = trigger.nextElementSibling;
+ trigger.classList.toggle('open');
+ detail.classList.toggle('open');
+}
+function toggleBA(prefix, which, btn) {
+ document.querySelectorAll(`[id^="${prefix}-"]`).forEach(p => p.classList.remove('active'));
+ document.getElementById(`${prefix}-${which}`).classList.add('active');
+ btn.closest('.ba-toggle').querySelectorAll('.ba-btn').forEach(b => b.classList.remove('active'));
+ btn.classList.add('active');
+}
+</script>
+</body>
+</html>

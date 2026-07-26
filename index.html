@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Research Operations Portfolio: Christin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+:root {
+ --paper:#FAFAF7; --paper2:#F3F2EE; --paper3:#E9E7E1;
+ --ink:#1C1C1A; --ink-mid:#5C5B56; --ink-soft:#9B9990;
+ --rule:rgba(28,28,26,0.10); --rule-mid:rgba(28,28,26,0.18);
+ --blue:#1A3A6B; --blue-dim:rgba(26,58,107,0.07); --blue-light:#2A5499;
+}
+body { font-family:'Inter',sans-serif; background:var(--paper); color:var(--ink); -webkit-font-smoothing:antialiased; min-height:100vh; }
+
+.site-header { background:var(--paper); border-bottom:1px solid var(--rule-mid); padding:0 2.5rem; height:56px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; }
+.header-name { font-family:'Libre Baskerville',serif; font-size:15px; color:var(--ink); }
+.header-role { font-size:10px; color:var(--ink-soft); letter-spacing:0.08em; text-transform:uppercase; font-weight:500; margin-top:2px; }
+.header-link { font-size:12px; color:var(--blue-light); text-decoration:none; }
+.header-link:hover { text-decoration:underline; }
+
+.page { max-width:820px; margin:0 auto; padding:0 2.5rem; }
+
+.hero { padding:5rem 0 3.5rem; border-bottom:1px solid var(--rule-mid); }
+.hero-kicker { font-size:10px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-soft); font-family:'JetBrains Mono',monospace; margin-bottom:1.25rem; }
+.hero-title { font-family:'Libre Baskerville',serif; font-size:clamp(30px,4.5vw,46px); line-height:1.18; color:var(--ink); margin-bottom:1.5rem; font-weight:400; }
+.hero-body { font-size:15px; color:var(--ink-mid); line-height:1.85; max-width:640px; font-weight:300; }
+.hero-body p { margin-bottom:0.875rem; }
+.hero-body strong { font-weight:600; color:var(--ink); }
+
+.artifacts { padding:3rem 0 5rem; }
+.artifacts-label { font-size:10px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-soft); font-family:'JetBrains Mono',monospace; margin-bottom:2rem; display:flex; align-items:center; gap:1rem; }
+.artifacts-label::after { content:''; flex:1; height:0.5px; background:var(--rule-mid); }
+
+.artifact-grid { display:flex; flex-direction:column; gap:0; border:1px solid var(--rule-mid); }
+.artifact-card { display:block; text-decoration:none; padding:1.75rem; border-bottom:0.5px solid var(--rule); transition:background 0.15s; }
+.artifact-card:last-child { border-bottom:none; }
+.artifact-card:hover { background:var(--paper2); }
+.artifact-num { font-size:10px; font-weight:600; letter-spacing:0.1em; font-family:'JetBrains Mono',monospace; color:var(--ink-soft); margin-bottom:0.5rem; }
+.artifact-title { font-family:'Libre Baskerville',serif; font-size:20px; color:var(--ink); margin-bottom:0.5rem; font-weight:400; }
+.artifact-subtitle { font-size:13px; color:var(--ink-mid); font-weight:300; line-height:1.5; margin-bottom:1rem; }
+.artifact-tags { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:1rem; }
+.artifact-tag { font-size:10px; font-family:'JetBrains Mono',monospace; color:var(--ink-soft); padding:2px 8px; border:0.5px solid var(--rule-mid); background:var(--paper3); }
+.artifact-cta { font-size:12px; font-weight:600; color:var(--blue-light); display:flex; align-items:center; gap:5px; }
+
+.site-footer { border-top:1px solid var(--rule); padding:2rem 2.5rem; display:flex; justify-content:space-between; font-size:11px; color:var(--ink-soft); max-width:820px; margin:0 auto; }
+.footer-link { color:var(--blue-light); text-decoration:none; font-size:12px; }
+.footer-link:hover { text-decoration:underline; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+ <div>
+ <div class="header-name">Christin Piganell</div>
+ <div class="header-role">Research Operations</div>
+ </div>
+ <a class="header-link" href="https://linkedin.com/in/cpiganell" target="_blank">LinkedIn →</a>
+</header>
+
+<div class="page">
+ <div class="hero">
+ <div class="hero-kicker">Research Operations Portfolio · 2026</div>
+ <h1 class="hero-title">Documentation systems for high-stakes,<br>multi-author technical work.</h1>
+ <div class="hero-body">
+ <p>This portfolio demonstrates the skills required for research operations at the frontier of AI safety: <strong>editorial governance of complex multi-contributor documents, production systems that keep hard-deadline artifacts internally consistent, and the ability to translate dense technical source material into precise, readable prose without losing accuracy or overstating certainty.</strong></p>
+ <p>Three artifacts. Each demonstrates a distinct dimension of the role. All are grounded in Anthropic's publicly available risk documentation rather than invented scenarios.</p>
+ </div>
+ </div>
+
+ <div class="artifacts">
+ <div class="artifacts-label">Portfolio artifacts</div>
+ <div class="artifact-grid">
+
+ <a href="research-ops-whitepaper.html" class="artifact-card">
+ <div class="artifact-num">Artifact 01</div>
+ <div class="artifact-title">Documentation Operations in Frontier AI Risk Reporting</div>
+ <div class="artifact-subtitle">A white paper analyzing Anthropic's published risk documentation from a documentation operations perspective: where multi-author transitions create register inconsistency, where terminology requires active discipline across RSP versions, and where cross-document consistency creates governance obligations.</div>
+ <div class="artifact-tags">
+ <span class="artifact-tag">White paper</span>
+ <span class="artifact-tag">Editorial analysis</span>
+ <span class="artifact-tag">RSP v1.0 through v3.4</span>
+ <span class="artifact-tag">System card analysis</span>
+ <span class="artifact-tag">Multi-author register</span>
+ <span class="artifact-tag">Cross-document consistency</span>
+ </div>
+ <div class="artifact-cta">Read white paper →</div>
+ </a>
+
+ <a href="research-ops-workflow.html" class="artifact-card">
+ <div class="artifact-num">Artifact 02</div>
+ <div class="artifact-title">Risk Report Production Workflow</div>
+ <div class="artifact-subtitle">End-to-end operations model for a Risk Report production cycle, mapped to RSP v3.4 requirements. Four phases from initiation through publication, with owner assignments, governance gates, and the specific provisions from v3.4 that change how each phase operates.</div>
+ <div class="artifact-tags">
+ <span class="artifact-tag">Production workflow</span>
+ <span class="artifact-tag">RSP v3.4 mapped</span>
+ <span class="artifact-tag">Governance gates</span>
+ <span class="artifact-tag">Multi-team coordination</span>
+ <span class="artifact-tag">Deadline management</span>
+ </div>
+ <div class="artifact-cta">View workflow →</div>
+ </a>
+
+ <a href="research-ops-governance.html" class="artifact-card">
+ <div class="artifact-num">Artifact 03</div>
+ <div class="artifact-title">Governance Package: Templates and Standards</div>
+ <div class="artifact-subtitle">The four artifacts a Research Ops Specialist builds and maintains between report cycles: an open-thread tracker with sample entries, a controlled definition registry drawn from RSP v3.4 language, a contributor checklist, and a publication QA checklist. Designed so each cycle starts from a stronger baseline.</div>
+ <div class="artifact-tags">
+ <span class="artifact-tag">Open-thread tracker</span>
+ <span class="artifact-tag">Definition registry</span>
+ <span class="artifact-tag">Contributor checklist</span>
+ <span class="artifact-tag">Publication QA</span>
+ <span class="artifact-tag">Cycle-to-cycle improvement</span>
+ </div>
+ <div class="artifact-cta">View governance package →</div>
+ </a>
+
+ <a href="research-ops-workflow-claude.html" class="artifact-card">
+ <div class="artifact-num">Artifact 04</div>
+ <div class="artifact-title">AI-Assisted Documentation Review: A Human-in-the-Loop Quality Framework</div>
+ <div class="artifact-subtitle">How Claude was used to produce this portfolio, where human judgment governed every consequential decision, and how the same approach applies to Risk Report production at scale. Four bounded tasks where Claude increases throughput, documented with explicit verification steps and the irreducible judgment layer that no tool can replace.</div>
+ <div class="artifact-tags">
+ <span class="artifact-tag">Working method</span>
+ <span class="artifact-tag">Claude as first pass</span>
+ <span class="artifact-tag">Human-in-the-loop</span>
+ <span class="artifact-tag">Honest disclosure</span>
+ <span class="artifact-tag">Operational model</span>
+ </div>
+ <div class="artifact-cta">View working method →</div>
+ </a>
+
+ </div>
+ </div>
+</div>
+
+<footer class="site-footer">
+ <div>Christin Piganell · Research Operations · 2026 · Based on publicly available Anthropic documentation</div>
+ <a class="footer-link" href="https://tinpigprod.github.io/cp_portfolio" target="_blank">Full portfolio →</a>
+</footer>
+
+</body>
+</html>

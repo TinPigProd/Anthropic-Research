@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Risk Report Production Workflow: Christin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+:root {
+ --paper:#FAFAF7; --paper2:#F3F2EE; --paper3:#E9E7E1;
+ --ink:#1C1C1A; --ink-mid:#5C5B56; --ink-soft:#9B9990;
+ --rule:rgba(28,28,26,0.10); --rule-mid:rgba(28,28,26,0.18);
+ --blue:#1A3A6B; --blue-dim:rgba(26,58,107,0.07); --blue-light:#2A5499;
+ --green:#1A4A2A; --green-dim:rgba(26,74,42,0.07);
+}
+body { font-family:'Inter',sans-serif; background:var(--paper); color:var(--ink); -webkit-font-smoothing:antialiased; min-height:100vh; }
+
+.site-header { background:var(--paper); border-bottom:1px solid var(--rule-mid); padding:0 2.5rem; height:56px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; }
+.header-name { font-family:'Libre Baskerville',serif; font-size:15px; color:var(--ink); }
+.header-back { font-size:12px; color:var(--blue-light); text-decoration:none; }
+.header-back:hover { text-decoration:underline; }
+
+.doc { max-width:740px; margin:0 auto; padding:0 2.5rem 6rem; }
+
+.cover { padding:4rem 0 3rem; border-bottom:2px solid var(--ink); margin-bottom:3rem; }
+.cover-type { font-size:10px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; font-family:'JetBrains Mono',monospace; color:var(--ink-soft); margin-bottom:1.5rem; }
+.cover-title { font-family:'Libre Baskerville',serif; font-size:clamp(22px,3.5vw,34px); line-height:1.25; color:var(--ink); margin-bottom:0.75rem; font-weight:400; }
+.cover-sub { font-size:15px; color:var(--ink-mid); font-weight:300; line-height:1.6; margin-bottom:2rem; }
+.cover-note { font-size:12px; color:var(--ink-soft); font-family:'JetBrains Mono',monospace; padding:0.75rem 1rem; background:var(--paper2); border:0.5px solid var(--rule-mid); }
+
+.intro { margin-bottom:3rem; font-size:14px; color:var(--ink); line-height:1.85; font-weight:300; }
+.intro strong { font-weight:600; }
+
+.phase { margin-bottom:3rem; }
+.phase-header { display:flex; align-items:baseline; gap:1rem; padding-bottom:0.75rem; border-bottom:1px solid var(--rule-mid); margin-bottom:1.5rem; }
+.phase-num { font-size:10px; font-weight:600; letter-spacing:0.1em; font-family:'JetBrains Mono',monospace; color:var(--ink-soft); }
+.phase-title { font-family:'Libre Baskerville',serif; font-size:20px; color:var(--ink); font-weight:400; }
+.phase-rsp { font-size:10px; font-family:'JetBrains Mono',monospace; color:var(--blue); margin-left:auto; white-space:nowrap; }
+
+.steps { display:flex; flex-direction:column; gap:0; }
+.step { display:grid; grid-template-columns:24px 1fr; gap:0; }
+.step-line { display:flex; flex-direction:column; align-items:center; }
+.step-dot { width:8px; height:8px; border-radius:50%; background:var(--blue); flex-shrink:0; margin-top:4px; }
+.step-connector { width:1px; flex:1; background:var(--rule-mid); margin:4px 0; min-height:16px; }
+.step:last-child .step-connector { display:none; }
+.step-body { padding:0 0 1.5rem 1rem; }
+.step-label { font-size:14px; font-weight:600; color:var(--ink); margin-bottom:4px; }
+.step-desc { font-size:13px; color:var(--ink); line-height:1.75; font-weight:300; }
+.step-owner { font-size:10px; font-family:'JetBrains Mono',monospace; color:var(--ink-soft); margin-top:5px; }
+.step-rsp { font-size:10px; font-family:'JetBrains Mono',monospace; color:var(--blue); margin-top:3px; }
+
+.callout { padding:1rem 1.25rem; border-left:3px solid var(--blue); margin:0.875rem 0; font-size:13px; line-height:1.65; font-weight:300; background:var(--blue-dim); }
+.callout-label { font-size:9px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; font-family:'JetBrains Mono',monospace; color:var(--blue); margin-bottom:5px; }
+
+.gate { background:var(--paper2); border:1px solid var(--rule-mid); border-top:3px solid var(--ink); padding:1.25rem; margin-bottom:1.5rem; }
+.gate-label { font-size:9px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; font-family:'JetBrains Mono',monospace; color:var(--ink-soft); margin-bottom:0.5rem; }
+.gate-title { font-family:'Libre Baskerville',serif; font-size:16px; color:var(--ink); margin-bottom:0.5rem; font-weight:400; }
+.gate-desc { font-size:13px; color:var(--ink); line-height:1.65; font-weight:300; }
+
+.doc-footer { margin-top:3rem; padding-top:2rem; border-top:0.5px solid var(--rule-mid); display:flex; justify-content:space-between; font-size:11px; color:var(--ink-soft); }
+.doc-footer a { color:var(--blue-light); text-decoration:none; }
+.doc-footer a:hover { text-decoration:underline; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+ <div class="header-name">Christin Piganell · Research Operations</div>
+ <div style="display:flex;gap:1.5rem;align-items:center;"><a href="https://linkedin.com/in/cpiganell" target="_blank" style="font-size:12px;color:var(--ink-soft);text-decoration:none;">LinkedIn →</a><a class="header-back" href="research-ops-index.html">← Portfolio</a></div>
+</header>
+
+<div class="doc">
+
+ <div class="cover">
+ <div class="cover-type">Production Workflow · Artifact 02</div>
+ <h1 class="cover-title">Risk Report Production Workflow</h1>
+ <p class="cover-sub">End-to-end operations model for a Risk Report cycle, mapped to RSP v3.4 requirements. Four phases, explicit ownership at every step, and the governance gates that determine whether the document ships on time as a coherent whole.</p>
+ <div class="cover-note">All phase requirements and governance gates reference RSP v3.4 (effective July 8, 2026) unless otherwise noted.</div>
+ </div>
+
+ <div class="intro">
+ <p>The RSP v3.4 specifies the procedural requirements for Risk Report production in Section 3.4: internal assessment and drafting, review and feedback, executive approval, and governance notification. What it does not specify is the operational infrastructure required to meet those requirements when the document draws on contributions from five or more specialist teams working under hard deadlines.</p>
+ <p><strong>This workflow fills that gap.</strong> It is designed around one constraint: the document must ship as a single internally consistent whole, on time, in a form that can withstand external review by parties selected for their domain expertise and their willingness to disagree. Every step is owned. Every gate is explicit. Every dependency is visible before it becomes a delay.</p>
+ </div>
+
+ <div class="phase">
+ <div class="phase-header">
+ <div class="phase-num">Phase 01</div>
+ <div class="phase-title">Initiation</div>
+ <div class="phase-rsp">RSP v3.4 §3.1, §3.4</div>
+ </div>
+ <div class="steps">
+ <div class="step">
+ <div class="step-line"><div class="step-dot"></div><div class="step-connector"></div></div>
+ <div class="step-body">
+ <div class="step-label">Coverage date determination</div>
+ <div class="step-desc">RSO and Research Ops establish the coverage date before any contributor begins drafting. Under RSP v3.4, reports may analyze risks as of a coverage date distinct from the publication date. This prevents contributors from writing toward different implicit time horizons. The coverage date is documented in the report header, the open-thread tracker, and the contributor assignment matrix from day one.</div>
+ <div class="step-owner">Owner: RSO + Research Ops</div>
+ <div class="step-rsp">RSP v3.4 §3.1 coverage date provision (new in v3.4)</div>
+ </div>
+ </div>
+ <div class="step">
+ <div class="step-line"><div class="step-dot"></div><div class="step-connector"></div></div>
+ <div class="step-body">
+ <div class="step-label">Contributor matrix and section assignments</div>
+ <div class="step-desc">Research Ops produces the contributor matrix: who owns each section, what evidence they are responsible for providing, what the handoff deadline is, and who the Research Ops contact is for each team. Distributed to all contributors at kickoff. This is the accountability structure for the entire cycle, not a courtesy document.</div>
+ <div class="step-owner">Owner: Research Ops</div>
+ </div>
+ </div>
+ <div class="step">
+ <div class="step-line"><div class="step-dot"></div><div class="step-connector"></div></div>
+ <div class="step-body">
+ <div class="step-label">Definition registry initialized</div>
+ <div class="step-desc">Research Ops opens the definition registry for this cycle, drawing from the current RSP version. Every term that appears in multiple sections or has changed meaning across RSP versions is listed with its approved current usage. Contributors reference this before submitting drafts. The registry is versioned: it reflects RSP v3.4 terminology and explicitly flags terms that changed meaning in prior versions.</div>
+ <div class="step-owner">Owner: Research Ops</div>
+ </div>
+ </div>
+ <div class="step">
+ <div class="step-line"><div class="step-dot"></div><div class="step-connector"></div></div>
+ <div class="step-body">
+ <div class="step-label">RSP consistency baseline established</div>
+ <div class="step-desc">Research Ops reviews the prior Risk Report and system cards for commitments that must be addressed in this cycle. Any commitment from a prior report that the RSP requires be tracked, any noteworthy change in mitigation practices, any deviation from prior reporting, is logged as a pre-populated open thread. The cycle begins with its obligations already visible.</div>
+ <div class="step-owner">Owner: Research Ops</div>
+ <div class="step-rsp">RSP v3.4 §3.3: review of past Risk Reports and decisions</div>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <div class="phase">
+ <div class="phase-header">
+ <div class="phase-num">Phase 02</div>
+ <div class="phase-title">Draft Collection</div>
+ <div class="phase-rsp">RSP v3.4 §3.3, §3.4 Item 1</div>
+ </div>
+ <div class="steps">
+ <div class="step">
+ <div class="step-line"><div class="step-dot"></div><div class="step-connector"></div></div>
+ <div class="step-body">
+ <div class="step-label">Subject matter expert drafts submitted</div>
+ <div class="step-desc">Each contributing team submits their section in their natural register with the contributor checklist completed. Research Ops does not ask contributors to write in the final document's voice. Register translation is Research Ops' responsibility. Subject matter accuracy is theirs. Contributors are expected to flag their own open questions at the end of their draft, naming the team responsible for resolution.</div>
+ <div class="step-owner">Owner: Frontier Red Team, Safeguards, Alignment, Interpretability, Capabilities</div>
+ </div>
+ </div>
+ <div class="step">
+ <div class="step-line"><div class="step-dot"></div><div class="step-connector"></div></div>
+ <div class="step-body">
+ <div class="step-label">Open-thread tracker populated</div>
+ <div class="step-desc">Research Ops reads all drafts within 48 hours of receipt and populates the open-thread tracker: every unresolved question, terminology conflict, claim without supporting evidence, inter-section inconsistency, and cross-document conflict. Each thread gets an owner, a resolution deadline, and a blocking status. Blocking threads stop the editorial integration phase from beginning until they are resolved.</div>
+ <div class="step-owner">Owner: Research Ops</div>
+ </div>
+ </div>
+ </div>
+ <div class="callout">
+ <div class="callout-label">The first open-thread review</div>
+ The open-thread tracker after Phase 02 is typically the most important document in the production cycle. It shows which teams need to coordinate before integration can begin, which questions are material to the RSO's deployment determination, and where the hard deadline pressure is concentrated. Research Ops reviews it with the RSO within three days of draft collection closing.
+ </div>
+ </div>
+
+ <div class="phase">
+ <div class="phase-header">
+ <div class="phase-num">Phase 03</div>
+ <div class="phase-title">Editorial Integration</div>
+ <div class="phase-rsp">RSP v3.4 §3.2, §3.3</div>
+ </div>
+ <div class="steps">
+ <div class="step">
+ <div class="step-line"><div class="step-dot"></div><div class="step-connector"></div></div>
+ <div class="step-body">
+ <div class="step-label">Terminology pass</div>
+ <div class="step-desc">Every instance of every defined term is verified against the definition registry. Terms used inconsistently across sections are resolved to the approved form. Sections that introduce a term not in the registry are flagged: either the term is added with a definition, or its usage is scoped to that section with an explicit limitation. No defined term appears in two places with two meanings.</div>
+ <div class="step-owner">Owner: Research Ops</div>
+ </div>
+ </div>
+ <div class="step">
+ <div class="step-line"><div class="step-dot"></div><div class="step-connector"></div></div>
+ <div class="step-body">
+ <div class="step-label">Evidence-to-claim traceability review</div>
+ <div class="step-desc">Every risk claim is traced to its supporting evidence. Claims without evidence are added to the open-thread tracker as blocking. Evidence cited in support of a claim is verified to actually support that claim at the confidence level the claim implies. An 11% circumvention rate that exceeds a 5% target supports "the target was not met": it does not on its own support "the model should not be deployed." The distinction matters and Research Ops enforces it.</div>
+ <div class="step-owner">Owner: Research Ops</div>
+ </div>
+ </div>
+ <div class="step">
+ <div class="step-line"><div class="step-dot"></div><div class="step-connector"></div></div>
+ <div class="step-body">
+ <div class="step-label">Single-voice editorial pass</div>
+ <div class="step-desc">Each section is edited to a consistent register: precise, candid about uncertainty, specific about evidence, direct in conclusions. The Red Team's findings and the Alignment team's qualifications must coexist without either being distorted. The goal is a document that reads as a single coherent argument, not a collection of technically accurate but editorially inconsistent contributions. This is the most time-intensive step. It cannot be rushed.</div>
+ <div class="step-owner">Owner: Research Ops</div>
+ </div>
+ </div>
+ <div class="step">
+ <div class="step-line"><div class="step-dot"></div><div class="step-connector"></div></div>
+ <div class="step-body">
+ <div class="step-label">RSP consistency check</div>
+ <div class="step-desc">The integrated draft is reviewed against RSP v3.4. Every RSP commitment referenced in the report is verified against the current RSP text. Every disclosure required by the RSP is confirmed present. Every new v3.4 requirement: coverage date notation, redaction indication, marginal risk analysis escalation: is checked. Gaps are added to the open-thread tracker as blocking before the draft advances to review.</div>
+ <div class="step-owner">Owner: Research Ops</div>
+ <div class="step-rsp">RSP v3.4 §3.2: general expectations for Risk Reports</div>
+ </div>
+ </div>
+ <div class="step">
+ <div class="step-line"><div class="step-dot"></div><div class="step-connector"></div></div>
+ <div class="step-body">
+ <div class="step-label">Redaction review and indication</div>
+ <div class="step-desc">Research Ops coordinates the redaction pass with Safeguards and Legal. Per RSP v3.4, every redaction must be explicitly indicated in the public version using one of the four rationale categories specified in Section 3.5. Research Ops ensures every redacted passage has its marker, the stated rationale is accurate and RSP-compliant, and the public version's description of mitigations remains accurate without the redacted detail.</div>
+ <div class="step-owner">Owner: Research Ops + Legal</div>
+ <div class="step-rsp">RSP v3.4 §3.5: redaction indication (new in v3.4)</div>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <div class="phase">
+ <div class="phase-header">
+ <div class="phase-num">Phase 04</div>
+ <div class="phase-title">Review and Approval</div>
+ <div class="phase-rsp">RSP v3.4 §3.4, §3.6</div>
+ </div>
+ <div class="steps">
+ <div class="step">
+ <div class="step-line"><div class="step-dot"></div><div class="step-connector"></div></div>
+ <div class="step-body">
+ <div class="step-label">Alignment Stress Testing independent review</div>
+ <div class="step-desc">Per RSP v3.4 Section 3.4 Item 2, a separate internal team reviews for methodological weaknesses, analytical gaps, and areas requiring additional evidence. Research Ops coordinates the review, provides the reviewer with the integrated draft and the open-thread log, tracks all feedback as new threads, and ensures every point is either addressed in the draft or documented as a known limitation with explicit RSO acknowledgment.</div>
+ <div class="step-owner">Owner: Alignment Stress Testing · tracked by Research Ops</div>
+ </div>
+ </div>
+ <div class="step">
+ <div class="step-line"><div class="step-dot"></div><div class="step-connector"></div></div>
+ <div class="step-body">
+ <div class="step-label">RSO and CEO submission package</div>
+ <div class="step-desc">Research Ops prepares the submission package per RSP v3.4 Section 3.4 Item 3: the integrated draft, the open-thread log with resolution status for every thread, the Alignment Stress Testing feedback summary, and any available external feedback. The RSO and CEO make the ultimate determination on the required ASL standards. Research Ops does not make this determination. It ensures the package they receive is complete and that no open blocking thread remains unaddressed.</div>
+ <div class="step-owner">Owner: RSO + CEO · package prepared by Research Ops</div>
+ <div class="step-rsp">RSP v3.4 §3.4 Item 3: executive approval</div>
+ </div>
+ </div>
+
+ <div class="step">
+ <div class="step-line"><div class="step-dot"></div><div class="step-connector"></div></div>
+ <div class="step-body">
+ <div class="step-label">Marginal risk analysis gate check</div>
+ <div class="step-desc">If marginal risk analysis plays a material role in the deployment determination, RSP v3.4 Section 3.4 Item 5 requires explicit Board and LTBT approval rather than RSO approval alone. Research Ops flags this requirement at the outset if any contributor draft suggests marginal risk framing, so the escalation path is planned rather than discovered at the approval stage.</div>
+ <div class="step-owner">Owner: RSO · flagged by Research Ops</div>
+ <div class="step-rsp">RSP v3.4 §3.4 Item 5: marginal risk escalation</div>
+ </div>
+ </div>
+ <div class="step">
+ <div class="step-line"><div class="step-dot"></div><div class="step-connector"></div></div>
+ <div class="step-body">
+ <div class="step-label">Board and LTBT notification</div>
+ <div class="step-desc">Following RSO approval, Research Ops coordinates the Board and LTBT notification package per RSP v3.4 Section 3.4 Item 4. The unredacted report and internal feedback are shared promptly. Research Ops tracks acknowledgment and ensures the governance notification is documented before the public version is released.</div>
+ <div class="step-owner">Owner: RSO · coordinated by Research Ops</div>
+ <div class="step-rsp">RSP v3.4 §3.4 Items 4–5: governance notification</div>
+ </div>
+ </div>
+ <div class="step">
+ <div class="step-line"><div class="step-dot"></div><div class="step-connector"></div></div>
+ <div class="step-body">
+ <div class="step-label">Publication, version archive, and cycle retrospective</div>
+ <div class="step-desc">Public version published. Research Ops archives the unredacted version, the contributor draft history, the complete open-thread log with resolutions, and the redaction record. The cycle retrospective identifies process improvements: what should be added to the contributor checklist, what definition registry entries need updating, what kickoff steps were missed and created downstream delay. The next cycle starts from a stronger baseline.</div>
+ <div class="step-owner">Owner: Research Ops</div>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <div class="gate">
+ <div class="gate-label">Special case</div>
+ <div class="gate-title">When the report covers a highly capable model and is significantly redacted</div>
+ <div class="gate-desc">RSP v3.4 Section 3.6 defines "highly capable" as a model that could compress two years of 2018–2024 AI progress into a single year. When a report covers such a model and is significantly redacted, a full external review process is required: one or more external reviewers receive the unredacted report within one week of Board/LTBT submission and have 30 days to provide public commentary. Research Ops identifies the trigger conditions at kickoff and plans for the external review timeline from day one, rather than discovering the requirement at the governance approval stage.</div>
+ </div>
+
+ <div class="doc-footer">
+ <div>Christin Piganell · Research Operations Portfolio · 2026</div>
+ <a href="research-ops-index.html">← Back to portfolio</a>
+ </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Governance Package: Christin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+:root {
+ --paper:#FAFAF7; --paper2:#F3F2EE; --paper3:#E9E7E1;
+ --ink:#1C1C1A; --ink-mid:#5C5B56; --ink-soft:#9B9990;
+ --rule:rgba(28,28,26,0.10); --rule-mid:rgba(28,28,26,0.18);
+ --blue:#1A3A6B; --blue-dim:rgba(26,58,107,0.07); --blue-light:#2A5499;
+ --amber:#6B4A00; --amber-dim:rgba(107,74,0,0.08);
+ --red:#7A1A1A; --red-dim:rgba(122,26,26,0.07);
+ --green:#1A4A2A; --green-dim:rgba(26,74,42,0.07);
+}
+body { font-family:'Inter',sans-serif; background:var(--paper); color:var(--ink); -webkit-font-smoothing:antialiased; min-height:100vh; }
+
+.site-header { background:var(--paper); border-bottom:1px solid var(--rule-mid); padding:0 2.5rem; height:56px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; }
+.header-name { font-family:'Libre Baskerville',serif; font-size:15px; color:var(--ink); }
+.header-back { font-size:12px; color:var(--blue-light); text-decoration:none; }
+.header-back:hover { text-decoration:underline; }
+
+.doc { max-width:740px; margin:0 auto; padding:0 2.5rem 6rem; }
+
+.cover { padding:4rem 0 3rem; border-bottom:2px solid var(--ink); margin-bottom:3rem; }
+.cover-type { font-size:10px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; font-family:'JetBrains Mono',monospace; color:var(--ink-soft); margin-bottom:1.5rem; }
+.cover-title { font-family:'Libre Baskerville',serif; font-size:clamp(22px,3.5vw,34px); line-height:1.25; color:var(--ink); margin-bottom:0.75rem; font-weight:400; }
+.cover-sub { font-size:15px; color:var(--ink-mid); font-weight:300; line-height:1.6; }
+
+.section { margin-bottom:3rem; }
+.section-num { font-size:10px; font-weight:600; letter-spacing:0.1em; font-family:'JetBrains Mono',monospace; color:var(--ink-soft); margin-bottom:0.25rem; }
+.section-title { font-family:'Libre Baskerville',serif; font-size:22px; color:var(--ink); margin-bottom:0.5rem; padding-bottom:0.75rem; border-bottom:0.5px solid var(--rule-mid); font-weight:400; }
+.section-purpose { font-size:13px; color:var(--ink-mid); font-weight:300; line-height:1.65; margin-bottom:1.25rem; }
+
+/* THREAD TRACKER */
+.threads { display:flex; flex-direction:column; gap:0.625rem; }
+.thread { border:0.5px solid var(--rule-mid); background:var(--paper); }
+.thread-header { display:flex; align-items:flex-start; justify-content:space-between; gap:0.75rem; padding:0.875rem 1rem 0.5rem; }
+.thread-id { font-size:9px; font-weight:600; font-family:'JetBrains Mono',monospace; color:var(--ink-soft); white-space:nowrap; padding-top:2px; }
+.thread-title { font-size:13px; font-weight:600; color:var(--ink); flex:1; line-height:1.4; }
+.thread-body { font-size:12px; color:var(--ink); line-height:1.65; font-weight:300; padding:0 1rem 0.875rem; }
+.thread-meta { display:flex; flex-wrap:wrap; gap:0.875rem; padding:0.625rem 1rem; border-top:0.5px solid var(--rule); background:var(--paper2); }
+.thread-meta-item { font-size:10px; font-family:'JetBrains Mono',monospace; color:var(--ink-soft); }
+.thread-meta-item strong { color:var(--ink-mid); font-weight:500; }
+.badge { display:inline-block; font-size:9px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; font-family:'JetBrains Mono',monospace; padding:2px 6px; }
+.badge-open { background:var(--red-dim); color:var(--red); }
+.badge-progress { background:var(--amber-dim); color:var(--amber); }
+.badge-resolved { background:var(--green-dim); color:var(--green); }
+
+/* DEFINITION REGISTRY */
+.registry { border:1px solid var(--rule-mid); }
+.registry-row { display:grid; grid-template-columns:180px 1fr; border-bottom:0.5px solid var(--rule); }
+.registry-row:last-child { border-bottom:none; }
+.reg-term { padding:0.875rem 1rem; font-size:12px; font-weight:600; font-family:'JetBrains Mono',monospace; color:var(--ink); border-right:0.5px solid var(--rule); background:var(--paper2); letter-spacing:0.02em; }
+.reg-def { padding:0.875rem 1rem; font-size:12px; color:var(--ink); line-height:1.65; font-weight:300; }
+.reg-def em { font-style:italic; color:var(--ink-soft); }
+.reg-def .do-not { font-size:10px; font-family:'JetBrains Mono',monospace; color:var(--red); display:block; margin-top:5px; }
+
+/* CHECKLISTS */
+.checklist { border:1px solid var(--rule-mid); }
+.checklist-section { border-bottom:0.5px solid var(--rule-mid); }
+.checklist-section:last-child { border-bottom:none; }
+.checklist-section-label { padding:0.625rem 1rem; font-size:10px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; font-family:'JetBrains Mono',monospace; color:var(--blue); background:var(--blue-dim); border-bottom:0.5px solid var(--rule); }
+.checklist-item { display:grid; grid-template-columns:36px 1fr; align-items:start; padding:0.6rem 1rem; border-bottom:0.5px solid var(--rule); font-size:12px; color:var(--ink); font-weight:300; line-height:1.5; }
+.checklist-item:last-child { border-bottom:none; }
+.check-box { width:12px; height:12px; border:1px solid var(--rule-mid); background:var(--paper); margin-top:2px; flex-shrink:0; }
+
+.doc-footer { margin-top:3rem; padding-top:2rem; border-top:0.5px solid var(--rule-mid); display:flex; justify-content:space-between; font-size:11px; color:var(--ink-soft); }
+.doc-footer a { color:var(--blue-light); text-decoration:none; }
+.doc-footer a:hover { text-decoration:underline; }
+
+@media(max-width:640px){
+ .registry-row { grid-template-columns:1fr; }
+ .reg-term { border-right:none; border-bottom:0.5px solid var(--rule); }
+ .doc { padding:0 1.5rem 5rem; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+ <div class="header-name">Christin Piganell · Research Operations</div>
+ <div style="display:flex;gap:1.5rem;align-items:center;"><a href="https://linkedin.com/in/cpiganell" target="_blank" style="font-size:12px;color:var(--ink-soft);text-decoration:none;">LinkedIn →</a><a class="header-back" href="research-ops-index.html">← Portfolio</a></div>
+</header>
+
+<div class="doc">
+
+ <div class="cover">
+ <div class="cover-type">Governance Package · Artifact 03</div>
+ <h1 class="cover-title">Templates and Standards for Risk Report Production</h1>
+ <p class="cover-sub">The four working documents a Research Ops Specialist builds and maintains between report cycles. Each is designed to reduce the time-to-first-clean-draft and eliminate the most common failure modes in multi-author technical documentation.</p>
+ </div>
+
+ <!-- OPEN THREAD TRACKER -->
+ <div class="section">
+ <div class="section-num">Artifact 03-A</div>
+ <div class="section-title">Open Thread Tracker</div>
+ <div class="section-purpose">Every unresolved question, terminology conflict, or evidentiary gap gets an entry. Research Ops owns this document. No thread closes without a documented resolution. Blocking threads prevent the editorial integration phase from beginning until resolved. The following entries are representative samples from a CBRN-focused Risk Report cycle.</div>
+
+ <div class="threads">
+
+ <div class="thread">
+ <div class="thread-header">
+ <div class="thread-id">OT-001</div>
+ <div class="thread-title">SME disagreement on uplift magnitude: Red Team sessions RT-01 and RT-03</div>
+ <span class="badge badge-open">Blocking</span>
+ </div>
+ <div class="thread-body">External reviewer A (academic background) assessed the outputs from RT-01 and RT-03 as within the range of open-source accessible information and consistent with the kind of assistance a motivated undergraduate could obtain through published literature. External reviewer B (operational background) assessed the same outputs as providing procedurally specific guidance not available in open sources and constituting meaningful uplift under the CBRN-3 threshold definition. This disagreement is material to the risk determination in Section 4 and cannot be resolved by Research Ops without additional domain input. The deployment determination cannot proceed while this thread is open.</div>
+ <div class="thread-meta">
+ <div class="thread-meta-item"><strong>Owner:</strong> Research Ops</div>
+ <div class="thread-meta-item"><strong>Resolution path:</strong> Fourth reviewer with operational domain experience, not academic background</div>
+ <div class="thread-meta-item"><strong>Blocking:</strong> RSO submission</div>
+ <div class="thread-meta-item"><strong>Opened:</strong> Day 8</div>
+ </div>
+ </div>
+
+ <div class="thread">
+ <div class="thread-header">
+ <div class="thread-id">OT-002</div>
+ <div class="thread-title">Terminology conflict: three terms for one finding across Sections 2, 3, and 5</div>
+ <span class="badge badge-resolved">Resolved</span>
+ </div>
+ <div class="thread-body">Red Team draft (Section 2) used "viable output." Capabilities draft (Section 3 evaluation table) used "non-viable protocols." Alignment draft (Section 5 risk assessment) used "meaningful uplift." All three describe the same underlying finding from the RT-01 sessions but carry different connotations of confidence and threshold proximity. A reader comparing sections would encounter three different implied confidence levels for the same evidence. Resolution: final document standardizes to "meaningful uplift" per RSP v3.4 CBRN-3 threshold language throughout. Red Team and Capabilities sections updated by Research Ops with team confirmation.</div>
+ <div class="thread-meta">
+ <div class="thread-meta-item"><strong>Owner:</strong> Research Ops</div>
+ <div class="thread-meta-item"><strong>Resolution:</strong> Standardized to RSP v3.4 terminology · all sections updated · both teams confirmed accuracy</div>
+ <div class="thread-meta-item"><strong>Resolved:</strong> Day 11</div>
+ <div class="thread-meta-item"><strong>Registry update:</strong> "viable output" and "viable protocol" added as non-preferred terms in definition registry</div>
+ </div>
+ </div>
+
+ <div class="thread">
+ <div class="thread-header">
+ <div class="thread-id">OT-003</div>
+ <div class="thread-title">Coverage date not established at kickoff: contributor drafts written to different implicit time horizons</div>
+ <span class="badge badge-resolved">Resolved</span>
+ </div>
+ <div class="thread-body">RSP v3.4 allows Risk Reports to analyze risks as of a coverage date distinct from the publication date. This provision was not identified at kickoff, so contributors wrote without a consistent temporal reference. The Red Team draft references evaluation sessions conducted in March. The Capabilities draft references updated benchmark scores from April. The Safeguards draft references mitigation implementations completed in early May. If these are treated as equally current, a reader cannot assess whether the risk picture is as of March, April, or May. Resolution: coverage date established retroactively as the date capability evaluations were finalized. Coverage date notation added to report header and executive summary. All time references in contributor drafts reviewed for consistency with coverage date.</div>
+ <div class="thread-meta">
+ <div class="thread-meta-item"><strong>Owner:</strong> Research Ops</div>
+ <div class="thread-meta-item"><strong>Resolution:</strong> Coverage date established · notation added · all contributor time references aligned</div>
+ <div class="thread-meta-item"><strong>Process improvement:</strong> Coverage date determination added as Step 1 in kickoff checklist for next cycle</div>
+ </div>
+ </div>
+
+ <div class="thread">
+ <div class="thread-header">
+ <div class="thread-id">OT-004</div>
+ <div class="thread-title">Safeguards section references classifier architecture detail requiring redaction</div>
+ <span class="badge badge-resolved">Resolved</span>
+ </div>
+ <div class="thread-body">Safeguards draft included specific classifier architecture details that the Safeguards team flagged as potential redaction candidates under RSP v3.4 Section 3.5 rationale category "public safety considerations." The detail describes the specific input pattern recognition logic that underlies CBRN classifier guards. Publishing this detail would enable targeted circumvention. RSP v3.4 requires that the redaction be explicitly indicated in the public version. Resolution: technical architecture detail moved to redacted annex. Public section replaced with RSP-appropriate description of mitigation category and documented effectiveness metric. Redaction indicator added per v3.4 requirement: [REDACTED: public safety considerations]. Safeguards team confirmed the public summary is accurate without being enabling.</div>
+ <div class="thread-meta">
+ <div class="thread-meta-item"><strong>Owner:</strong> Research Ops + Safeguards + Legal</div>
+ <div class="thread-meta-item"><strong>Resolution:</strong> Redacted with v3.4-compliant indicator · summary approved by Safeguards · rationale documented</div>
+ <div class="thread-meta-item"><strong>RSP reference:</strong> §3.5 Item 3: public safety considerations</div>
+ </div>
+ </div>
+
+ <div class="thread">
+ <div class="thread-header">
+ <div class="thread-id">OT-005</div>
+ <div class="thread-title">Alignment Stress Testing feedback: Section 4 conclusion overstates certainty relative to evidence</div>
+ <span class="badge badge-progress">In progress</span>
+ </div>
+ <div class="thread-body">Alignment Stress Testing review identified that Section 4's risk determination language ("the model does not cross the CBRN-3 threshold") implies a level of certainty not supported by the evidence in Sections 2 and 3. Section 2 contains an unresolved SME disagreement (OT-001). Section 3 notes that evaluation methods "do not conclusively demonstrate high risk": language that also does not conclusively rule it out. The Stress Testing reviewer noted that the conclusion in Section 4 reads as more definitive than the evidence warrants and may not withstand external review by a domain expert. Resolution in progress: Research Ops is working with Alignment to revise Section 4 to reflect the conditional nature of the determination given OT-001's unresolved status.</div>
+ <div class="thread-meta">
+ <div class="thread-meta-item"><strong>Owner:</strong> Research Ops + Alignment</div>
+ <div class="thread-meta-item"><strong>Status:</strong> Revision in progress: contingent on OT-001 resolution</div>
+ <div class="thread-meta-item"><strong>Blocking:</strong> RSO submission until OT-001 resolved and Section 4 revised</div>
+ </div>
+ </div>
+
+ </div>
+ </div>
+
+ <!-- DEFINITION REGISTRY -->
+ <div class="section">
+ <div class="section-num">Artifact 03-B</div>
+ <div class="section-title">Definition Registry · RSP v3.4 Cycle</div>
+ <div class="section-purpose">Initialized at kickoff. All contributors reference this before submitting drafts. Updated when a new term is introduced that requires consistent usage. Versioned with each report cycle. This registry reflects RSP v3.4 (effective July 8, 2026).</div>
+
+ <div class="registry">
+ <div class="registry-row">
+ <div class="reg-term">Meaningful uplift</div>
+ <div class="reg-def">As defined in RSP v3.4 CBRN-3 capability threshold: the ability to significantly help individuals or groups with basic technical backgrounds create, obtain, or deploy chemical or biological weapons with serious potential for catastrophic harm. Does not refer to general scientific knowledge accessible in open literature.<span class="do-not">Do not use: "viable output," "viable protocol," "useful result," "helpful output"</span></div>
+ </div>
+ <div class="registry-row">
+ <div class="reg-term">ASL (AI Safety Level)</div>
+ <div class="reg-def">Per RSP v2.0 onwards: refers exclusively to groups of technical and operational safeguards, not to models. Correct usage: "deployed under the ASL-3 Standard." Prior usage of "ASL-3 model" as a noun phrase reflects RSP v1.0 terminology and is no longer current.<span class="do-not">Do not use: "ASL-3 model," "an ASL-N system" as model designators</span></div>
+ </div>
+ <div class="registry-row">
+ <div class="reg-term">Coverage date</div>
+ <div class="reg-def">Per RSP v3.4 §3.1: the date as-of which risk analysis in this report is conducted. May differ from publication date. Must be stated explicitly in the report header when it differs. Not synonymous with evaluation completion date or system card publication date. <em>New in RSP v3.4.</em></div>
+ </div>
+ <div class="registry-row">
+ <div class="reg-term">Capability threshold</div>
+ <div class="reg-def">Per RSP v2.0 onwards: a specific level of model capability that triggers a requirement for enhanced safeguards. Distinct from ASL, which refers to the safeguards themselves. CBRN-3 and CBRN-4 are capability thresholds. A model "approaches" or "crosses" a capability threshold; it does not "reach an ASL level."<span class="do-not">Do not conflate with ASL level</span></div>
+ </div>
+ <div class="registry-row">
+ <div class="reg-term">Redaction indication</div>
+ <div class="reg-def">Per RSP v3.4 §3.5: public Risk Reports must contain explicit markers where material has been redacted, using one of four rationale categories: (1) legal compliance, (2) intellectual property protection, (3) public safety considerations, (4) privacy. Format: [REDACTED: public safety considerations]. <em>New requirement in RSP v3.4. Does not apply retroactively to prior reports.</em></div>
+ </div>
+ <div class="registry-row">
+ <div class="reg-term">Marginal risk analysis</div>
+ <div class="reg-def">Per RSP v3.4 §3.3: arguing that risks from a specific model are relatively lower when accounting for risks unavoidably posed by other AI systems. When this framing plays a material role in a deployment determination, explicit Board and LTBT approval is required, not just RSO approval. Flag any use of this framing to RSO immediately.<span class="do-not">Triggers Board/LTBT approval gate (§3.4 Item 5)</span></div>
+ </div>
+ <div class="registry-row">
+ <div class="reg-term">Highly capable (model)</div>
+ <div class="reg-def">Per RSP v3.4 §3.6: a model that could fully automate, or dramatically accelerate, the work of large, top-tier research teams in domains where fast progress could threaten international security. Current operationalization: a model that could compress two years of 2018–2024 AI progress into a single year. Triggers mandatory external review requirement when combined with significant redaction.</div>
+ </div>
+ </div>
+ </div>
+
+ <!-- CONTRIBUTOR CHECKLIST -->
+ <div class="section">
+ <div class="section-num">Artifact 03-C</div>
+ <div class="section-title">Contributor Checklist</div>
+ <div class="section-purpose">Distributed at kickoff. Required submission alongside every draft. Reduces the open-thread load by ensuring contributors complete the first layer of consistency checking themselves before Research Ops receives the draft. Each contributing team signs off on their checklist before their section enters the editorial integration phase.</div>
+
+ <div class="checklist">
+ <div class="checklist-section">
+ <div class="checklist-section-label">Terminology and definitions</div>
+ <div class="checklist-item"><div class="check-box"></div>All defined terms used as specified in the definition registry for this cycle. No use of prior-version terminology without explicit scope limitation.</div>
+ <div class="checklist-item"><div class="check-box"></div>Any new term introduced in this section that will appear elsewhere in the document has been flagged to Research Ops for registry addition.</div>
+ <div class="checklist-item"><div class="check-box"></div>Field shorthand or team-specific terminology is defined on first use or flagged for Research Ops to add a definition.</div>
+ </div>
+ <div class="checklist-section">
+ <div class="checklist-section-label">Evidence and claims</div>
+ <div class="checklist-item"><div class="check-box"></div>Every quantitative claim includes its evaluation method, sample size, confidence interval where available, and the date the evaluation was conducted relative to the coverage date.</div>
+ <div class="checklist-item"><div class="check-box"></div>Every risk claim is directly supported by evidence present in this section or cross-referenced by section number to another section.</div>
+ <div class="checklist-item"><div class="check-box"></div>No conclusion goes beyond what the evidence in this section supports. Uncertainty is stated explicitly where it exists.</div>
+ <div class="checklist-item"><div class="check-box"></div>No comparison to prior model versions unless the prior model's evaluation used the same methodology. Methodological differences are noted.</div>
+ </div>
+ <div class="checklist-section">
+ <div class="checklist-section-label">Redaction and sensitivity</div>
+ <div class="checklist-item"><div class="check-box"></div>Sections requiring redaction are flagged with the proposed rationale category from RSP v3.4 §3.5.</div>
+ <div class="checklist-item"><div class="check-box"></div>The public version of any redacted section has been drafted and is included alongside the redaction candidate, so Research Ops can confirm accuracy without the redacted detail.</div>
+ </div>
+ <div class="checklist-section">
+ <div class="checklist-section-label">Open questions and handoffs</div>
+ <div class="checklist-item"><div class="check-box"></div>All unresolved questions that require input from another team are listed at the end of the draft, with the responsible team named.</div>
+ <div class="checklist-item"><div class="check-box"></div>Subject matter expert contact named for Research Ops follow-up questions.</div>
+ <div class="checklist-item"><div class="check-box"></div>Draft reviewed against the specific RSP commitment this section addresses. No commitment is referenced that is not in the current RSP version.</div>
+ </div>
+ </div>
+ </div>
+
+ <!-- PUBLICATION QA -->
+ <div class="section">
+ <div class="section-num">Artifact 03-D</div>
+ <div class="section-title">Publication QA Checklist</div>
+ <div class="section-purpose">Research Ops runs this check against the final integrated draft before RSO submission. Every item must be confirmed or documented as a known exception with explicit RSO acknowledgment and a documented rationale. No item may be skipped.</div>
+
+ <div class="checklist">
+ <div class="checklist-section">
+ <div class="checklist-section-label">RSP v3.4 compliance</div>
+ <div class="checklist-item"><div class="check-box"></div>Coverage date stated in report header if different from publication date. (RSP v3.4 §3.1: new requirement)</div>
+ <div class="checklist-item"><div class="check-box"></div>All redactions explicitly indicated with rationale category per RSP v3.4 §3.5. No section silently omits detail without an indicator.</div>
+ <div class="checklist-item"><div class="check-box"></div>If marginal risk analysis is present: Board and LTBT approval obtained per RSP v3.4 §3.4 Item 5, not RSO approval alone.</div>
+ <div class="checklist-item"><div class="check-box"></div>All RSP commitments referenced in the report are consistent with RSP v3.4. No references to prior-version commitment language that has since changed.</div>
+ <div class="checklist-item"><div class="check-box"></div>If report covers a highly capable model and is significantly redacted: external review process initiated per RSP v3.4 §3.6.</div>
+ </div>
+ <div class="checklist-section">
+ <div class="checklist-section-label">Internal consistency</div>
+ <div class="checklist-item"><div class="check-box"></div>No terminology inconsistencies across sections. All terms match the definition registry for this cycle.</div>
+ <div class="checklist-item"><div class="check-box"></div>All open threads resolved or documented as known limitations with explicit RSO acknowledgment. No blocking thread remains open.</div>
+ <div class="checklist-item"><div class="check-box"></div>Evaluation tables in appendices match narrative claims in body sections exactly. No discrepancy between a stated score and its narrative interpretation.</div>
+ <div class="checklist-item"><div class="check-box"></div>Cross-references between sections verified. No dangling section numbers referencing content that was moved, merged, or removed.</div>
+ <div class="checklist-item"><div class="check-box"></div>Confidence levels are consistent across sections for the same finding. No section implies more certainty than the evidence supports.</div>
+ </div>
+ <div class="checklist-section">
+ <div class="checklist-section-label">Cross-document consistency</div>
+ <div class="checklist-item"><div class="check-box"></div>All claims about model capabilities are consistent with the most recent published system card for the model family. Any discrepancy is documented and explained.</div>
+ <div class="checklist-item"><div class="check-box"></div>Noteworthy changes in mitigation practices since the prior Risk Report are explicitly addressed per RSP v3.4 §3.3.</div>
+ <div class="checklist-item"><div class="check-box"></div>Commitments made in prior Risk Reports that are being tracked in this cycle are confirmed present and addressed.</div>
+ </div>
+ <div class="checklist-section">
+ <div class="checklist-section-label">Governance and archive</div>
+ <div class="checklist-item"><div class="check-box"></div>Unredacted version archived with access list confirmed with RSO before public version is released.</div>
+ <div class="checklist-item"><div class="check-box"></div>Open-thread log with all resolution documentation archived alongside the draft history.</div>
+ <div class="checklist-item"><div class="check-box"></div>Process improvements identified during this cycle documented for inclusion in next cycle's kickoff checklist.</div>
+ </div>
+ </div>
+ </div>
+
+ <div class="doc-footer">
+ <div>Christin Piganell · Research Operations Portfolio · 2026</div>
+ <a href="research-ops-index.html">← Back to portfolio</a>
+ </div>
+
+</div>
+</body>
+</html>

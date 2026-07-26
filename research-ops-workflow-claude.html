@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI-Assisted Documentation Review: Christin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+:root {
+ --paper:#FAFAF7; --paper2:#F3F2EE; --paper3:#E9E7E1;
+ --ink:#1C1C1A; --ink-mid:#5C5B56; --ink-soft:#9B9990;
+ --rule:rgba(28,28,26,0.10); --rule-mid:rgba(28,28,26,0.18);
+ --blue:#1A3A6B; --blue-dim:rgba(26,58,107,0.07); --blue-light:#2A5499;
+ --amber:#6B4A00; --amber-dim:rgba(107,74,0,0.08);
+ --green:#1A4A2A; --green-dim:rgba(26,74,42,0.07);
+ --red:#7A1A1A; --red-dim:rgba(122,26,26,0.07);
+ --teal:#1A6B6B; --teal-dim:rgba(26,107,107,0.07);
+}
+body { font-family:'Inter',sans-serif; background:var(--paper); color:var(--ink); -webkit-font-smoothing:antialiased; min-height:100vh; }
+
+.site-header { background:var(--paper); border-bottom:1px solid var(--rule-mid); padding:0 2.5rem; height:56px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; }
+.header-name { font-family:'Libre Baskerville',serif; font-size:15px; color:var(--ink); }
+.header-back { font-size:12px; color:var(--blue-light); text-decoration:none; }
+.header-back:hover { text-decoration:underline; }
+
+.doc { max-width:740px; margin:0 auto; padding:0 2.5rem 6rem; }
+
+.cover { padding:4rem 0 3rem; border-bottom:2px solid var(--ink); margin-bottom:3rem; }
+.cover-type { font-size:10px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; font-family:'JetBrains Mono',monospace; color:var(--ink-soft); margin-bottom:1.5rem; }
+.cover-title { font-family:'Libre Baskerville',serif; font-size:clamp(22px,3.5vw,32px); line-height:1.25; color:var(--ink); margin-bottom:0.75rem; font-weight:400; }
+.cover-sub { font-size:15px; color:var(--ink-mid); font-weight:300; line-height:1.65; }
+
+.section { margin-bottom:3rem; }
+.section-num { font-size:10px; font-weight:600; letter-spacing:0.1em; font-family:'JetBrains Mono',monospace; color:var(--ink-soft); margin-bottom:0.25rem; }
+.section-title { font-family:'Libre Baskerville',serif; font-size:22px; color:var(--ink); margin-bottom:0.75rem; padding-bottom:0.75rem; border-bottom:0.5px solid var(--rule-mid); font-weight:400; }
+.section-body { font-size:14px; color:var(--ink); line-height:1.85; font-weight:300; }
+.section-body p { margin-bottom:1rem; }
+.section-body p:last-child { margin-bottom:0; }
+.section-body strong { font-weight:600; }
+
+/* HONEST DISCLOSURE BOX */
+.disclosure { background:var(--paper2); border:1px solid var(--rule-mid); border-left:4px solid var(--blue); padding:1.75rem; margin-bottom:3rem; }
+.disclosure-label { font-size:9px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; font-family:'JetBrains Mono',monospace; color:var(--blue); margin-bottom:1rem; }
+.disclosure-body { font-size:14px; color:var(--ink); line-height:1.85; font-weight:300; }
+.disclosure-body p { margin-bottom:0.875rem; }
+.disclosure-body p:last-child { margin-bottom:0; }
+.disclosure-body strong { font-weight:600; }
+
+/* TASK GRID */
+.task-grid { display:flex; flex-direction:column; gap:0; border:1px solid var(--rule-mid); margin:1.25rem 0; }
+.task-row { border-bottom:0.5px solid var(--rule); }
+.task-row:last-child { border-bottom:none; }
+.task-trigger { display:grid; grid-template-columns:1fr auto; gap:1rem; align-items:center; padding:1rem; cursor:pointer; background:var(--paper); border:none; width:100%; text-align:left; font-family:'Inter',sans-serif; transition:background 0.15s; }
+.task-trigger:hover, .task-trigger.open { background:var(--paper2); }
+.task-header { display:flex; flex-direction:column; gap:4px; }
+.task-label { font-size:13px; font-weight:600; color:var(--ink); }
+.task-summary { font-size:11px; color:var(--ink-soft); font-weight:300; }
+.task-chevron { font-size:9px; color:var(--blue); transition:transform 0.2s; flex-shrink:0; }
+.task-trigger.open .task-chevron { transform:rotate(180deg); }
+.task-detail { display:none; border-top:0.5px solid var(--rule); }
+.task-detail.open { display:block; }
+
+/* THREE COLUMNS */
+.task-cols { display:grid; grid-template-columns:1fr 1fr 1fr; gap:0; }
+.task-col { padding:1rem; border-right:0.5px solid var(--rule); }
+.task-col:last-child { border-right:none; }
+.task-col-label { font-size:9px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; font-family:'JetBrains Mono',monospace; margin-bottom:0.625rem; }
+.col-claude .task-col-label { color:var(--teal); }
+.col-human .task-col-label { color:var(--blue); }
+.col-cannot .task-col-label { color:var(--amber); }
+.task-col-body { font-size:12px; color:var(--ink); line-height:1.65; font-weight:300; }
+.task-col-body li { margin-bottom:4px; padding-left:0; list-style:none; display:flex; gap:6px; }
+.task-col-body li::before { content:'·'; color:var(--ink-soft); flex-shrink:0; }
+
+/* PORTFOLIO PROCESS */
+.process-item { display:grid; grid-template-columns:24px 1fr; gap:0; margin-bottom:0; }
+.process-line { display:flex; flex-direction:column; align-items:center; }
+.process-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; margin-top:4px; }
+.process-dot-claude { background:var(--teal); }
+.process-dot-human { background:var(--blue); }
+.process-dot-both { background:var(--ink); }
+.process-connector { width:1px; flex:1; background:var(--rule-mid); margin:4px 0; min-height:16px; }
+.process-item:last-child .process-connector { display:none; }
+.process-body { padding:0 0 1.5rem 1rem; }
+.process-actor { font-size:9px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; font-family:'JetBrains Mono',monospace; margin-bottom:3px; }
+.actor-claude { color:var(--teal); }
+.actor-human { color:var(--blue); }
+.actor-both { color:var(--ink-mid); }
+.process-label { font-size:13px; font-weight:600; color:var(--ink); margin-bottom:3px; }
+.process-desc { font-size:12px; color:var(--ink); line-height:1.65; font-weight:300; }
+.process-note { font-size:11px; font-family:'JetBrains Mono',monospace; color:var(--ink-soft); margin-top:4px; }
+
+/* OVERRIDE TABLE */
+.override-table { width:100%; border-collapse:collapse; font-size:12px; margin:1.25rem 0; }
+.override-table th { background:var(--paper3); padding:0.6rem 0.875rem; text-align:left; font-size:9px; letter-spacing:0.1em; text-transform:uppercase; font-family:'JetBrains Mono',monospace; color:var(--ink-mid); font-weight:600; border-bottom:1px solid var(--rule-mid); }
+.override-table td { padding:0.75rem 0.875rem; border-bottom:0.5px solid var(--rule); color:var(--ink); line-height:1.5; font-weight:300; vertical-align:top; }
+.override-table tr:last-child td { border-bottom:none; }
+.td-strong { font-weight:600; }
+.badge { display:inline-block; font-size:9px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; font-family:'JetBrains Mono',monospace; padding:2px 6px; }
+.badge-corrected { background:var(--amber-dim); color:var(--amber); }
+.badge-verified { background:var(--green-dim); color:var(--green); }
+.badge-added { background:var(--blue-dim); color:var(--blue); }
+
+/* CALLOUT */
+.callout { padding:1rem 1.25rem; border-left:3px solid; margin:1.25rem 0; font-size:13px; line-height:1.7; font-weight:300; }
+.callout-label { font-size:9px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; font-family:'JetBrains Mono',monospace; margin-bottom:5px; }
+.callout-blue { background:var(--blue-dim); border-color:var(--blue); }
+.callout-blue .callout-label { color:var(--blue); }
+.callout-teal { background:var(--teal-dim); border-color:var(--teal); }
+.callout-teal .callout-label { color:var(--teal); }
+
+/* WHAT STAYS HUMAN */
+.human-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.625rem; margin:1.25rem 0; }
+.human-card { background:var(--paper2); border:0.5px solid var(--rule-mid); padding:1rem; }
+.human-card-label { font-size:9px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; font-family:'JetBrains Mono',monospace; color:var(--blue); margin-bottom:0.5rem; }
+.human-card-body { font-size:12px; color:var(--ink); line-height:1.65; font-weight:300; }
+
+.doc-footer { margin-top:3rem; padding-top:2rem; border-top:0.5px solid var(--rule-mid); display:flex; justify-content:space-between; font-size:11px; color:var(--ink-soft); }
+.doc-footer a { color:var(--blue-light); text-decoration:none; }
+.doc-footer a:hover { text-decoration:underline; }
+
+@media(max-width:640px){
+ .task-cols { grid-template-columns:1fr; }
+ .task-col { border-right:none; border-bottom:0.5px solid var(--rule); }
+ .task-col:last-child { border-bottom:none; }
+ .human-grid { grid-template-columns:1fr; }
+ .doc { padding:0 1.5rem 5rem; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+ <div class="header-name">Christin Piganell · Research Operations</div>
+ <div style="display:flex;gap:1.5rem;align-items:center;"><a href="https://linkedin.com/in/cpiganell" target="_blank" style="font-size:12px;color:var(--ink-soft);text-decoration:none;">LinkedIn →</a><a class="header-back" href="research-ops-index.html">← Portfolio</a></div>
+</header>
+
+<div class="doc">
+
+ <div class="cover">
+ <div class="cover-type">Working Method · Artifact 04</div>
+ <h1 class="cover-title">AI-Assisted Documentation Review:<br>A Human-in-the-Loop Quality Framework</h1>
+ <p class="cover-sub">How Claude was used to produce this portfolio, where human judgment governed every consequential decision, and how the same approach applies to Risk Report production at scale.</p>
+ </div>
+
+ <!-- HONEST DISCLOSURE -->
+ <div class="disclosure">
+ <div class="disclosure-label">An honest account</div>
+ <div class="disclosure-body">
+ <p>This portfolio was produced with Claude as a first-pass tool for drafting, terminology checking, and structural scaffolding. <strong>Every RSP citation was verified against the source document by hand. Every editorial judgment was made by me. Every artifact was reviewed, corrected, and in many cases substantially revised before it reflects what you see here.</strong></p>
+ <p>I am disclosing this because the role I am applying for requires exactly this kind of practice: using frontier AI tools as productivity aids without substituting them for independent judgment. Pretending this portfolio emerged entirely from prior AI safety expertise would be dishonest and would misrepresent the actual skill being demonstrated.</p>
+ <p>The skill being demonstrated is not "I already know everything about AI safety documentation." It is: <strong>"I know how to design a system that uses Claude intelligently, verify its outputs rigorously, and apply human judgment where no tool can substitute."</strong> That is a Research Operations skill. It is transferable to Risk Report production. And it is documented here.</p>
+ </div>
+ </div>
+
+ <!-- SECTION 1: HOW THIS PORTFOLIO WAS PRODUCED -->
+ <div class="section">
+ <div class="section-num">Section 1</div>
+ <div class="section-title">How This Portfolio Was Produced</div>
+ <div class="section-body">
+ <p>The following documents the actual workflow used to produce the three primary artifacts in this portfolio: the white paper, the production workflow, and the governance package. It is organized by step, with explicit attribution of what Claude generated and what required human judgment to verify, correct, or override.</p>
+ </div>
+
+ <div style="margin-top:1.25rem;">
+ <div class="process-item">
+ <div class="process-line"><div class="process-dot process-dot-human"></div><div class="process-connector"></div></div>
+ <div class="process-body">
+ <div class="process-actor actor-human">Human</div>
+ <div class="process-label">Source document research and primary reading</div>
+ <div class="process-desc">RSP v1.0 through v3.4, the February 2026 Risk Report, the Claude Opus 4.6 System Card, and the Claude Sonnet 4.6 System Card were read in full. The analysis in the white paper, the RSP version comparisons, and the cross-document consistency observations are based on direct reading of primary sources, not Claude summaries of them.</div>
+ <div class="process-note">Cannot be delegated: source fidelity requires reading the document, not a summary of it</div>
+ </div>
+ </div>
+
+ <div class="process-item">
+ <div class="process-line"><div class="process-dot process-dot-claude"></div><div class="process-connector"></div></div>
+ <div class="process-body">
+ <div class="process-actor actor-claude">Claude first pass</div>
+ <div class="process-label">Initial structure and section scaffolding</div>
+ <div class="process-desc">Claude generated initial structural outlines for the white paper sections, the workflow phases, and the governance artifacts. These outlines provided a starting scaffold that was then substantially revised: sections reordered, arguments restructured, and content that did not reflect the primary source reading was removed or corrected.</div>
+ <div class="process-note">Claude output: structural skeleton. Human output: the argument and the content that fills it</div>
+ </div>
+ </div>
+
+ <div class="process-item">
+ <div class="process-line"><div class="process-dot process-dot-human"></div><div class="process-connector"></div></div>
+ <div class="process-body">
+ <div class="process-actor actor-human">Human verification pass</div>
+ <div class="process-label">Every RSP citation checked against source</div>
+ <div class="process-desc">Every reference to a specific RSP version, section number, or quoted provision was verified against the actual RSP document. Claude's version attribution was accurate in most cases. Three instances required correction: a section reference that pointed to v3.0 language that had been updated in v3.4, a quoted provision that had been paraphrased rather than accurately represented, and a terminology note that described the v2.0 change incorrectly. All three were corrected before the white paper was finalized.</div>
+ <div class="process-note">Three corrections found and made. Citation accuracy cannot be delegated to the model being cited about</div>
+ </div>
+ </div>
+
+ <div class="process-item">
+ <div class="process-line"><div class="process-dot process-dot-claude"></div><div class="process-connector"></div></div>
+ <div class="process-body">
+ <div class="process-actor actor-claude">Claude first pass</div>
+ <div class="process-label">Contributor voice characterizations drafted</div>
+ <div class="process-desc">The five contributor register characterizations in the white paper Section 3 were drafted by Claude based on descriptions of each team's mandate from Anthropic's published research pages, the system card, and the risk report. The sample sentences in each contributor section were generated by Claude as representative register examples.</div>
+ <div class="process-note">Claude output: plausible approximations of each register. Human output: verification that these match what the published documents actually show</div>
+ </div>
+ </div>
+
+ <div class="process-item">
+ <div class="process-line"><div class="process-dot process-dot-human"></div><div class="process-connector"></div></div>
+ <div class="process-body">
+ <div class="process-actor actor-human">Human verification pass</div>
+ <div class="process-label">Register characterizations verified against published source material</div>
+ <div class="process-desc">Each contributor voice characterization was checked against actual language in the February 2026 Risk Report and the Opus 4.6 System Card. The Alignment Science characterization required revision: Claude's initial version overstated the team's reluctance to draw conclusions. The published documents show Alignment making clear determinations with appropriate qualification, not avoiding conclusions. The characterization was revised to reflect this distinction.</div>
+ <div class="process-note">One substantive revision. The distinction between "qualified" and "refuses to conclude" matters for how the contributor is treated in a production cycle</div>
+ </div>
+ </div>
+
+ <div class="process-item">
+ <div class="process-line"><div class="process-dot process-dot-both"></div><div class="process-connector"></div></div>
+ <div class="process-body">
+ <div class="process-actor actor-both">Iterative</div>
+ <div class="process-label">Governance artifacts drafted, reviewed, revised</div>
+ <div class="process-desc">The open-thread tracker entries, definition registry, contributor checklist, and publication QA checklist went through multiple passes. Claude generated initial drafts. Human review identified where entries were generic rather than AI safety specific, where checklist items could be gamed without actually doing the work they described, and where definition entries needed do-not-use guidance that Claude had not included. All five open-thread tracker entries were substantially revised to reflect realistic AI safety documentation scenarios grounded in the published source material.</div>
+ <div class="process-note">The governance artifacts look simple. The editorial judgment required to make them accurate and non-gameable required multiple revision cycles</div>
+ </div>
+ </div>
+
+ <div class="process-item">
+ <div class="process-line"><div class="process-dot process-dot-human"></div><div class="process-connector"></div></div>
+ <div class="process-body">
+ <div class="process-actor actor-human">Human final pass</div>
+ <div class="process-label">Consistency review and em dash rule enforcement</div>
+ <div class="process-desc">A final consistency pass checked terminology across all pages against the definition registry, verified that no em dashes appeared anywhere in the portfolio, confirmed that all RSP version references were correct, and reviewed that no contributor voice characterization overstated her AI safety expertise. The em dash rule applies across the entire portfolio without exception.</div>
+ <div class="process-note">This is Research Operations work. The tool produces volume. The human catches what the tool cannot catch about itself</div>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <!-- SECTION 2: WHAT CLAUDE CAN AND CANNOT DO -->
+ <div class="section">
+ <div class="section-num">Section 2</div>
+ <div class="section-title">Proposed Operational Model: Claude-Assisted Risk Report Review</div>
+ <div class="section-body">
+ <p>The same framework that governed this portfolio's production maps directly to Risk Report production. The following four tasks are bounded, verifiable uses of Claude as a first-pass tool. Each one increases throughput without reducing the accuracy or judgment quality of the final document. Each one has a clear human verification step that cannot be skipped.</p>
+ </div>
+
+ <div class="task-grid">
+
+ <div class="task-row">
+ <button class="task-trigger" onclick="toggleTask(this)">
+ <div class="task-header">
+ <div class="task-label">Task 01: Terminology consistency sweep</div>
+ <div class="task-summary">Claude flags deviations from the definition registry across contributor drafts</div>
+ </div>
+ <div class="task-chevron">▼</div>
+ </button>
+ <div class="task-detail">
+ <div class="task-cols">
+ <div class="task-col col-claude">
+ <div class="task-col-label">Claude produces</div>
+ <div class="task-col-body"><ul>
+ <li>A flagged list of every instance where a term appears to deviate from the definition registry</li>
+ <li>Location (section, paragraph) for each flag</li>
+ <li>The registry-approved term alongside the flagged usage</li>
+ <li>A count of how many times each term appears across all sections</li>
+ </ul></div>
+ </div>
+ <div class="task-col col-human">
+ <div class="task-col-label">Human verifies</div>
+ <div class="task-col-body"><ul>
+ <li>Whether each flagged deviation is an error or a legitimate scoped usage with an explicit limitation</li>
+ <li>Whether the registry definition itself needs updating given how contributors are using the term</li>
+ <li>Whether any deviations Claude missed are present on a spot-check sample</li>
+ </ul></div>
+ </div>
+ <div class="task-col col-cannot">
+ <div class="task-col-label">Claude cannot determine</div>
+ <div class="task-col-body"><ul>
+ <li>Whether a deviation changes the risk picture, not just the word choice</li>
+ <li>Whether the registry definition is itself accurate under the current RSP version</li>
+ <li>Whether a term's usage in one section subtly implies a different confidence level than its usage in another</li>
+ </ul></div>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <div class="task-row">
+ <button class="task-trigger" onclick="toggleTask(this)">
+ <div class="task-header">
+ <div class="task-label">Task 02: RSP commitment cross-reference check</div>
+ <div class="task-summary">Claude identifies every RSP section referenced in a draft and flags apparent discrepancies</div>
+ </div>
+ <div class="task-chevron">▼</div>
+ </button>
+ <div class="task-detail">
+ <div class="task-cols">
+ <div class="task-col col-claude">
+ <div class="task-col-label">Claude produces</div>
+ <div class="task-col-body"><ul>
+ <li>A list of every RSP provision referenced in the draft, with section numbers</li>
+ <li>The draft's characterization of each provision alongside the actual RSP text</li>
+ <li>Flagged instances where the characterization appears to differ from the source</li>
+ <li>A list of RSP requirements that should appear in the document based on its content but are not referenced</li>
+ </ul></div>
+ </div>
+ <div class="task-col col-human">
+ <div class="task-col-label">Human verifies</div>
+ <div class="task-col-body"><ul>
+ <li>Whether flagged discrepancies are errors or legitimate interpretive choices that need explicit justification</li>
+ <li>Whether missing RSP references represent gaps or deliberate scope decisions</li>
+ <li>Whether any RSP provisions were missed by Claude on a spot-check</li>
+ </ul></div>
+ </div>
+ <div class="task-col col-cannot">
+ <div class="task-col-label">Claude cannot determine</div>
+ <div class="task-col-body"><ul>
+ <li>Whether the RSP provision itself has been correctly interpreted, not just correctly cited</li>
+ <li>Whether a deliberate interpretive choice is defensible to an external reviewer</li>
+ <li>Whether the RSP has been updated since the version Claude has access to</li>
+ </ul></div>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <div class="task-row">
+ <button class="task-trigger" onclick="toggleTask(this)">
+ <div class="task-header">
+ <div class="task-label">Task 03: Register inconsistency detection</div>
+ <div class="task-summary">Claude flags passages where confidence level or voice shifts without acknowledgment</div>
+ </div>
+ <div class="task-chevron">▼</div>
+ </button>
+ <div class="task-detail">
+ <div class="task-cols">
+ <div class="task-col col-claude">
+ <div class="task-col-label">Claude produces</div>
+ <div class="task-col-body"><ul>
+ <li>Flagged passages where hedging language appears inconsistently across similar claims</li>
+ <li>Instances where "we believe," "we assess," "we determine," and "we conclude" are used for claims that appear to carry similar evidentiary weight</li>
+ <li>Sections where the implied confidence level shifts between paragraphs without a stated reason</li>
+ </ul></div>
+ </div>
+ <div class="task-col col-human">
+ <div class="task-col-label">Human verifies</div>
+ <div class="task-col-body"><ul>
+ <li>Whether the confidence shift is an error or reflects a genuine difference in evidentiary basis between the two claims</li>
+ <li>Whether the flagged language accurately represents the contributor's epistemic state or has drifted in editing</li>
+ <li>Which register should govern the integrated document at this point in the argument</li>
+ </ul></div>
+ </div>
+ <div class="task-col col-cannot">
+ <div class="task-col-label">Claude cannot determine</div>
+ <div class="task-col-body"><ul>
+ <li>Whether the underlying evidence actually supports the confidence level implied by the language</li>
+ <li>Whether a claim should be more or less certain, not just whether it is stated consistently</li>
+ <li>Whether an external reviewer with domain expertise would accept the confidence level as appropriate</li>
+ </ul></div>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <div class="task-row">
+ <button class="task-trigger" onclick="toggleTask(this)">
+ <div class="task-header">
+ <div class="task-label">Task 04: Open thread candidate generation</div>
+ <div class="task-summary">Claude generates candidate open threads from contributor drafts for Research Ops review</div>
+ </div>
+ <div class="task-chevron">▼</div>
+ </button>
+ <div class="task-detail">
+ <div class="task-cols">
+ <div class="task-col col-claude">
+ <div class="task-col-label">Claude produces</div>
+ <div class="task-col-body"><ul>
+ <li>A list of claims in contributor drafts that appear to lack cited evidence</li>
+ <li>Cross-section conflicts where the same finding is described differently</li>
+ <li>Questions implied by the draft that are not addressed anywhere in the document</li>
+ <li>Redaction candidates based on content category patterns</li>
+ </ul></div>
+ </div>
+ <div class="task-col col-human">
+ <div class="task-col-label">Human verifies</div>
+ <div class="task-col-body"><ul>
+ <li>Which candidates are genuine open threads versus resolved issues Claude misread</li>
+ <li>Which threads are blocking versus informational</li>
+ <li>Which threads Claude missed that a domain-informed reader would catch</li>
+ <li>Owner and resolution path for each confirmed thread</li>
+ </ul></div>
+ </div>
+ <div class="task-col col-cannot">
+ <div class="task-col-label">Claude cannot determine</div>
+ <div class="task-col-body"><ul>
+ <li>Whether an unresolved question is material to the RSO's deployment determination</li>
+ <li>Which reviewer's position on a substantive disagreement is more credible given their domain background</li>
+ <li>Whether a missing citation represents a gap in evidence or evidence that exists but was not included in the draft</li>
+ </ul></div>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ </div>
+ </div>
+
+ <!-- SECTION 3: WHAT STAYS HUMAN -->
+ <div class="section">
+ <div class="section-num">Section 3</div>
+ <div class="section-title">What Stays Human: The Irreducible Judgment Layer</div>
+ <div class="section-body">
+ <p>Every task above has a human verification step because every task produces output that can be wrong in ways the tool cannot catch about itself. The following decisions cannot be delegated to Claude at any point in a Risk Report production cycle. They require human judgment because the cost of error is not a process failure but a credibility failure in front of external reviewers, policymakers, and the public.</p>
+ </div>
+
+ <div class="human-grid">
+ <div class="human-card">
+ <div class="human-card-label">Whether a risk claim is accurate</div>
+ <div class="human-card-body">Claude can flag that a claim lacks cited evidence. It cannot assess whether the evidence, if present, supports the claim at the confidence level implied. That requires domain knowledge and judgment about what the evidence actually shows.</div>
+ </div>
+ <div class="human-card">
+ <div class="human-card-label">Resolving SME disagreements</div>
+ <div class="human-card-body">Claude can summarize two positions. It cannot determine which reviewer's background makes their assessment more credible for a specific threat model. That requires understanding what kind of expertise is relevant to the question at issue.</div>
+ </div>
+ <div class="human-card">
+ <div class="human-card-label">The deployment determination</div>
+ <div class="human-card-body">Claude can check that the determination section uses consistent terminology. It cannot assess whether the evidence in the capability sections actually supports the conclusion in the risk assessment section. That is the RSO's judgment, supported by Research Ops' editorial work.</div>
+ </div>
+ <div class="human-card">
+ <div class="human-card-label">Redaction scope decisions</div>
+ <div class="human-card-body">Claude can flag content that matches redaction category patterns. It cannot determine whether the public version's description of a mitigation remains accurate without the redacted detail, or whether a redaction would be considered material by an external reviewer.</div>
+ </div>
+ <div class="human-card">
+ <div class="human-card-label">Source verification</div>
+ <div class="human-card-body">Claude's characterization of RSP provisions, system card findings, and prior risk report commitments must be verified against the actual source documents. Claude's training data has a cutoff and can mischaracterize specific version differences. This portfolio found three instances requiring correction.</div>
+ </div>
+ <div class="human-card">
+ <div class="human-card-label">External reviewer preparation</div>
+ <div class="human-card-body">Preparing the document for external review requires judgment about what a domain expert specifically selected for their willingness to disagree will find inadequate. Claude can help identify potential weaknesses. It cannot simulate the perspective of a credible, disinterested external reviewer with significant safety expertise.</div>
+ </div>
+ </div>
+ </div>
+
+ <!-- SECTION 4: WHAT THIS DEMONSTRATES -->
+ <div class="section">
+ <div class="section-num">Section 4</div>
+ <div class="section-title">What This Demonstrates</div>
+
+ <div class="callout callout-blue">
+ <div class="callout-label">The case for this candidate</div>
+ This portfolio does not claim AI safety research expertise. It demonstrates something more specific and more immediately useful to a Research Operations function: the ability to design a system in which Claude increases throughput on bounded, verifiable tasks, while human judgment governs every decision that cannot be mechanically checked. That is the practice the role description names. It is documented here rather than asserted.
+ </div>
+
+ <div class="section-body" style="margin-top:1.25rem;">
+ <p>The gap this portfolio addresses is domain experience, not operational capability. The skills that make a Research Operations Specialist effective at Anthropic are the same skills that made this portfolio possible: reading source documents carefully enough to verify what a tool produced, knowing which editorial decisions require judgment rather than checking, building systems that improve with each cycle rather than producing one-off artifacts, and being honest about what was produced by whom and why.</p>
+ <p>Ten years of documentation governance, multi-contributor coordination, and editorial systems work does not disappear because the domain is new. It applies differently. This portfolio is the demonstration that it applies here.</p>
+ </div>
+ </div>
+
+ <div class="doc-footer">
+ <div>Christin Piganell · Research Operations Portfolio · 2026</div>
+ <a href="research-ops-index.html">← Back to portfolio</a>
+ </div>
+
+</div>
+
+<script>
+function toggleTask(trigger) {
+ const detail = trigger.nextElementSibling;
+ const isOpen = trigger.classList.contains('open');
+ document.querySelectorAll('.task-trigger').forEach(t => t.classList.remove('open'));
+ document.querySelectorAll('.task-detail').forEach(d => d.classList.remove('open'));
+ if (!isOpen) { trigger.classList.add('open'); detail.classList.add('open'); }
+}
+</script>
+</body>
+</html>
