@@ -149,8 +149,7 @@ body { font-family:'Inter',sans-serif; background:var(--paper); color:var(--ink)
  <div class="disclosure">
  <div class="disclosure-label">An honest account</div>
  <div class="disclosure-body">
- <p>This portfolio was produced with Claude as a first-pass tool for drafting, terminology checking, and structural scaffolding. <strong>Every RSP citation was verified against the source document by hand. Every editorial judgment was made by me. Every artifact was reviewed, corrected, and in many cases substantially revised before it reflects what you see here.</strong></p>
- <p>I am disclosing this because the role I am applying for requires exactly this kind of practice: using frontier AI tools as productivity aids without substituting them for independent judgment. Pretending this portfolio emerged entirely from prior AI safety expertise would be dishonest and would misrepresent the actual skill being demonstrated.</p>
+ <p>This portfolio was produced with Claude as a first-pass tool for drafting, terminology checking, and structural scaffolding. I am disclosing this because the role I am applying for requires exactly this kind of practice: using frontier AI tools as productivity aids without substituting them for independent judgment.</p>
  <p>The skill being demonstrated is not "I already know everything about AI safety documentation." It is: <strong>"I know how to design a system that uses Claude intelligently, verify its outputs rigorously, and apply human judgment where no tool can substitute."</strong> That is a Research Operations skill. It is transferable to Risk Report production. And it is documented here.</p>
  </div>
  </div>
@@ -185,12 +184,12 @@ body { font-family:'Inter',sans-serif; background:var(--paper); color:var(--ink)
  </div>
 
  <div class="process-item">
- <div class="process-line"><div class="process-dot process-dot-human"></div><div class="process-connector"></div></div>
+ <div class="process-line"><div class="process-dot process-dot-claude"></div><div class="process-connector"></div></div>
  <div class="process-body">
- <div class="process-actor actor-human">Human verification pass</div>
- <div class="process-label">Every RSP citation checked against source</div>
- <div class="process-desc">Every reference to a specific RSP version, section number, or quoted provision was verified against the actual RSP document. Claude's version attribution was accurate in most cases. Three instances required correction: a section reference that pointed to v3.0 language that had been updated in v3.4, a quoted provision that had been paraphrased rather than accurately represented, and a terminology note that described the v2.0 change incorrectly. All three were corrected before the white paper was finalized.</div>
- <div class="process-note">Three corrections found and made. Citation accuracy cannot be delegated to the model being cited about</div>
+ <div class="process-actor actor-claude">Claude</div>
+ <div class="process-label">RSP source research and citation grounding</div>
+ <div class="process-desc">Claude fetched and read the RSP versions, the February 2026 Risk Report, and the Opus 4.6 System Card. The version history, section references, terminology changelog entries, and cross-document observations in the white paper are all grounded in those source documents as Claude read and interpreted them. This is the domain research layer where Claude's ability to read and synthesize primary sources at speed is the productivity gain.</div>
+ <div class="process-note">Claude's read: the source material. The analytical frame applied to it: the documentation operations lens that comes from her background</div>
  </div>
  </div>
 
@@ -205,12 +204,12 @@ body { font-family:'Inter',sans-serif; background:var(--paper); color:var(--ink)
  </div>
 
  <div class="process-item">
- <div class="process-line"><div class="process-dot process-dot-human"></div><div class="process-connector"></div></div>
+ <div class="process-line"><div class="process-dot process-dot-both"></div><div class="process-connector"></div></div>
  <div class="process-body">
- <div class="process-actor actor-human">Human verification pass</div>
- <div class="process-label">Register characterizations verified against published source material</div>
- <div class="process-desc">Each contributor voice characterization was checked against actual language in the February 2026 Risk Report and the Opus 4.6 System Card. The Alignment Science characterization required revision: Claude's initial version overstated the team's reluctance to draw conclusions. The published documents show Alignment making clear determinations with appropriate qualification, not avoiding conclusions. The characterization was revised to reflect this distinction.</div>
- <div class="process-note">One substantive revision. The distinction between "qualified" and "refuses to conclude" matters for how the contributor is treated in a production cycle</div>
+ <div class="process-actor actor-both">Iterative</div>
+ <div class="process-label">Register characterizations refined through iteration</div>
+ <div class="process-desc">The five contributor voice characterizations went through multiple prompt iterations. The Alignment Science characterization required the most revision: an early version overstated the team's reluctance to draw conclusions. Subsequent prompting grounded it more specifically in the language the February 2026 Risk Report actually uses, which shows Alignment making clear determinations with appropriate qualification rather than avoiding conclusions. The distinction matters because it changes how Research Ops would treat that contributor in a production cycle.</div>
+ <div class="process-note">The analytical judgment about what the distinction means for operations: that came from the prompting and review process, not from Claude independently</div>
  </div>
  </div>
 
